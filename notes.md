@@ -136,3 +136,117 @@ axios.get("http://localhost:5000/api/data", {
 3. **On the frontend**, we set `{ withCredentials: true }` when making requests using Axios to ensure that cookies and authentication data are included.
 
 This setup ensures smooth communication between the frontend and backend in a MERN stack application. 🚀
+
+</br>
+
+
+
+
+![alt text](image.png)
+</br>
+# Redux Toolkit Notes
+
+## Setting Up Redux Toolkit
+
+1. **Created a separate folder for store:**
+   - Organized the Redux store inside a dedicated `store` folder for better maintainability.
+
+2. **Configured a Redux store:**
+   - The store contains reducers that handle different slices of state.
+   - Example setup:
+   
+   ```javascript
+   import { configureStore } from "@reduxjs/toolkit";
+   import userReducer from "../slices/userSlice";
+   
+   const store = configureStore({
+       reducer: {
+           user: userReducer,
+       },
+   });
+   
+   export default store;
+   ```
+
+3. **Created slices:**
+   - Used `createSlice` to manage state.
+   - Each slice contains an initial state, reducers (functions to modify the state), and actions.
+   
+   ```javascript
+   import { createSlice } from "@reduxjs/toolkit";
+   
+   const userSlice = createSlice({
+       name: "user",
+       initialState: { name: "", profileImg: "" },
+       reducers: {
+           setUser: (state, action) => {
+               state.name = action.payload.name;
+               state.profileImg = action.payload.profileImg;
+           },
+           logoutUser: (state) => {
+               state.name = "";
+               state.profileImg = "";
+           },
+       },
+   });
+   
+   export const { setUser, logoutUser } = userSlice.actions;
+   export default userSlice.reducer;
+   ```
+
+## Adding Data to Redux Store
+
+- **Using `useDispatch()`:**
+  - `useDispatch` is a React-Redux hook used to update the Redux store.
+  - Example:
+    
+    ```javascript
+    import { useDispatch } from "react-redux";
+    import { setUser } from "../slices/userSlice";
+    
+    const dispatch = useDispatch();
+    dispatch(setUser({ name: "John Doe", profileImg: "profile.jpg" }));
+    ```
+
+## Accessing Data from Redux Store
+
+- **Using `useSelector()`:**
+  - `useSelector` allows us to access the Redux store data.
+  - Example:
+    
+    ```javascript
+    import { useSelector } from "react-redux";
+    
+    const user = useSelector((store) => store.user);
+    console.log(user.name, user.profileImg);
+    ```
+
+## Making the Navbar Dynamic
+
+- Used `useSelector` to dynamically update the navbar based on the logged-in user.
+  
+  ```javascript
+  const user = useSelector((store) => store.user);
+  
+  return (
+      <nav>
+          <img src={user.profileImg} alt="User Profile" />
+          <span>{user.name}</span>
+      </nav>
+  );
+  ```
+
+## Organizing Utility Functions
+
+- **Created a `utils` folder:**
+  - Inside `utils`, we stored constants like the base URL.
+  
+  ```javascript
+  export const BASE_URL = "https://api.example.com";
+  ```
+  - Imported it wherever needed:
+  
+  ```javascript
+  import { BASE_URL } from "../utils/constants";
+  ```
+

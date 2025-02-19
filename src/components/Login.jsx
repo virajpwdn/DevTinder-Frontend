@@ -8,8 +8,9 @@ import { BASE_URL } from "../utils/constants";
 const Login = () => {
   const [emailId, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
   const navigate = useNavigate();
-  
   const dispatch = useDispatch();
 
   const submitHandler = async (e) => {
@@ -19,14 +20,15 @@ const Login = () => {
         emailId,
         password,
       }, {withCredentials:true});
-
+      
+      setError("")
       dispatch(addUser(res.data));
       navigate("/")
       
       setEmail("");
       setPassword("");
     } catch (error) {
-      console.log(error);
+      setError(error?.response?.data || "something went wrong");
     }
   };
 
@@ -67,6 +69,7 @@ const Login = () => {
                   </a>
                 </label>
               </div>
+              <p className="text-red-500 text-xs">{error}</p>
               <div className="form-control mt-6">
                 <button className="btn btn-primary">Login</button>
               </div>

@@ -1,8 +1,9 @@
 import React from 'react'
+import EditPage from './EditPage'
 
 const Profile = () => {
   return (
-    <div>Profile</div>
+    <div>{<EditPage />}</div>
   )
 }
 

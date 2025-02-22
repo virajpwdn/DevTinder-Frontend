@@ -20,12 +20,10 @@ const NavBar = () => {
       );
       dispatch(removeUser());
       navigate("/login");
-      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <div>
       {" "}
@@ -37,7 +35,7 @@ const NavBar = () => {
         </div>
         {user && (
           <div className="flex-none gap-2">
-            <div>Welcome, {user.message.firstName}</div>
+            <div>Welcome, {user?.firstName}</div>
             <div className="dropdown dropdown-end mx-5">
               <div
                 tabIndex={0}
@@ -48,7 +46,7 @@ const NavBar = () => {
                   <img
                     alt="userimage"
                     src={
-                      user?.message?.photo ||
+                      user?.photo ||
                       "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
                     }
                   />

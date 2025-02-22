@@ -5,14 +5,14 @@ import { useNavigate } from "react-router";
 import { addUser } from "../store/userSlice";
 import { BASE_URL } from "../utils/constants";
 
-const EditPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [gender, setGender] = useState("");
-  const [age, setAge] = useState("");
-  const [bio, setBio] = useState("");
-  const [skills, setSkills] = useState([]);
-  const [photo, setPhoto] = useState("");
+const EditPage = ({user}) => {
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [gender, setGender] = useState(user.gender);
+  const [age, setAge] = useState(user.age);
+  const [bio, setBio] = useState(user.bio);
+  const [skills, setSkills] = useState(user.skills);
+  const [photo, setPhoto] = useState(user.photo);
   const [error, setError] = useState("");
 
   const navigate = useNavigate();

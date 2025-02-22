@@ -10,25 +10,35 @@ const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+
   const getFeed = async () => {
     try {
       const res = await axios.get(BASE_URL + "/user/feed", {
         withCredentials: true,
       });
 
-      dispatch(addUser(res.data));
+      dispatch(addUser(res.data));  // Correct action
       console.log(res.data);
     } catch (error) {
+      setError(error?.response?.data || "Something went wrong");
       console.log(error?.response?.data);
     }
   };
-  console.log(feed);
-  useEffect(() => {
-    getFeed();
-  }, []);
-  if (!feed?.message?.length) return <p>Loading...</p>;
 
-  return <div><UserCard user={feed.message[8]} /></div>;
+  useEffect(() => {
+    if (!feed?.length) {
+      getFeed();
+    }
+  }, [feed]);
+
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (!feed?.length) return <p>Loading...</p>;
+
+  return feed.length >= 3 ? (
+    <div><UserCard user={feed[2]} /></div>
+  ) : (
+    <p>Not enough data</p>
+  );
 };
 
 export default Feed;

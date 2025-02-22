@@ -17,7 +17,7 @@ const Feed = () => {
         withCredentials: true,
       });
 
-      dispatch(addUser(res.data));  // Correct action
+      dispatch(addUser(res.data));
       console.log(res.data);
     } catch (error) {
       setError(error?.response?.data || "Something went wrong");

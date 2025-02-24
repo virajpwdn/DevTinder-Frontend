@@ -153,7 +153,7 @@ const EditPage = ({ user }) => {
         <UserCard user={{ firstName, photo, lastName, age, gender, bio }} />
         <div className="toast toast-center">
           <div className="alert alert-info">
-            <span>New mail arrived.</span>
+            <span>Profile updated successfully.</span>
           </div>
           <div className="alert alert-success">
             <span>hey</span>

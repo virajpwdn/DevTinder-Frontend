@@ -29,7 +29,7 @@ const Connection = () => {
   if (connection?.data?.length === 0) return <h1>No Connections Found</h1>;
 
   return (
-    <div className="text-center min-h-[30rem] mt-5">
+    <div className="text-center min-h-screen mt-5">
       <h1 className="font-semibold text-2xl">Connections</h1>
       {connection.data.map((elem, idx) => {
         const { firstName, lastName, gender, photo, age, bio } = elem;
@@ -43,7 +43,9 @@ const Connection = () => {
               />
             </div>
             <div className="right flex flex-col items-start">
-              <h2 className="font-semibold text-xl">{firstName + " " + lastName}</h2>
+              <h2 className="font-semibold text-xl">
+                {firstName + " " + lastName}
+              </h2>
               {gender && age && <h3>{gender + ", " + age}</h3>}
               <p>{bio}</p>
             </div>

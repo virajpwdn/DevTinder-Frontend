@@ -36,11 +36,11 @@ const Requests = () => {
       <h2 className="text-center font-semibold text-[1.1em] mb-20 mt-5">
         Connection Requests
       </h2>
-      {requests?.receivedRequests?.map((elem, idx) => {
-        const { firstName, lastName, gender, age, bio, photo } =
+      {requests?.receivedRequests?.map((elem) => {
+        const {_id, firstName, lastName, gender, age, bio, photo } =
           elem.fromUserId;
         return (
-          <div key={idx} className="min-h-screen">
+          <div key={_id} className="min-h-screen">
             <div className="flex items-center justify-center gap-5 my-5 ">
               <div className="left h-20 w-20 rounded-full">
                 <img

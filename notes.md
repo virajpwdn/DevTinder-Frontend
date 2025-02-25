@@ -250,8 +250,8 @@ This setup ensures smooth communication between the frontend and backend in a ME
   import { BASE_URL } from "../utils/constants";
   ```
 
-
-
+</br>
+</br>
 <!-- Notes
   
 
@@ -287,3 +287,99 @@ const requestSlice = createSlice({
   return newArray
 
  -->
+
+
+## Redux Slice for Request Handling
+
+We created a **Redux Slice** to manage connection requests in our application. The `requestSlice` stores requests received by the logged-in user and provides actions to update the store when requests are accepted or ignored.
+
+### **Request Slice Implementation**
+
+```javascript
+const requestSlice = createSlice({
+    name: "request",
+    initialState: null,
+    reducers: {
+        addRequest: (state, action) => action.payload,
+        removeRequest: (state, action) => {
+            const newArray = state.receivedRequests.filter((r) => r._id !== action.payload);
+            return newArray;
+        }
+    }
+});
+```
+
+### **Explanation of Reducer Actions**
+
+- **`addRequest`**:  
+  - Stores the request data received from the backend API into Redux.
+  - The payload is the data fetched from MongoDB, containing connection requests for the logged-in user.
+
+- **`removeRequest`**:  
+  - When a user **accepts** or **ignores** a request, we remove it from the Redux store.
+  - This is done by filtering out the request with the specified `_id` from `receivedRequests`.
+
+---
+
+## **How the Process Works**
+
+### 1️⃣ **Fetching Connection Requests from Backend**
+
+- The backend API finds **connection requests** received by the logged-in user.
+- It queries MongoDB using:  
+  
+  ```javascript
+  toUserId: loggedInUser._id
+  ```
+
+- This fetches all requests where `toUserId` matches the logged-in user's `_id`.
+- The backend sends the fetched data in JSON format, structured like this:
+
+  ```json
+  {
+    "receivedRequests": [
+      {
+        "_id": "request1",
+        "fromUserId": "user123",
+        "status": "pending"
+      },
+      {
+        "_id": "request2",
+        "fromUserId": "user456",
+        "status": "pending"
+      }
+    ]
+  }
+  ```
+
+### 2️⃣ **Storing Data in Redux**
+
+- The frontend stores the `receivedRequests` data in Redux using the `addRequest` action.
+
+### 3️⃣ **Handling Request Acceptance or Ignoring**
+
+- When a user **accepts** or **ignores** a request, the request’s `status` is updated in the database.
+- Once the status changes, **MongoDB will no longer return this request** when we fetch connection requests.
+- However, since Redux still holds this outdated data, the request remains visible **until the user refreshes the page**.
+
+### 4️⃣ **Removing Request from Redux Store**
+
+- To provide a seamless user experience **without requiring a page refresh**, we use the `removeRequest` action.
+- This action removes the request **immediately from the Redux store** once the user accepts or ignores it.
+
+  ```javascript
+  const newArray = state.receivedRequests.filter((r) => r._id !== action.payload);
+  return newArray;
+  ```
+
+- This ensures that the UI updates instantly, improving user experience.
+
+---
+
+## **Final Thoughts**
+
+- By leveraging **Redux**, we efficiently manage state changes without requiring a page reload.
+- The **removeRequest** action helps provide real-time UI updates when connection requests are processed.
+- Using **MongoDB queries** combined with Redux ensures **better performance and optimized state management**.
+
+Let me know if you need any improvements! 🚀

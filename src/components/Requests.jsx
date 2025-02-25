@@ -14,7 +14,6 @@ const Requests = () => {
         BASE_URL + "/request/review/" + status + "/" + id
       , {}, {withCredentials:true});
 
-      console.log(res);
       dispatch(removeRequest(id));
     } catch (error) {
       // TODO: store errors in state variable
@@ -54,6 +53,7 @@ const Requests = () => {
       {requests?.receivedRequests?.map((elem) => {
         const { _id, firstName, lastName, gender, age, bio, photo } =
           elem.fromUserId;
+          // console.log(_id + "-> "+ elem._id);
         return (
           <div key={_id} className="min-h-screen">
             <div className="flex items-center justify-center gap-5 my-5 ">

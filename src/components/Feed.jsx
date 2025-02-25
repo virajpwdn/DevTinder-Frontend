@@ -17,8 +17,9 @@ const Feed = () => {
         withCredentials: true,
       });
 
+      // TODO: add toster which has message like: your request is sent and it should have setTimeout
+
       dispatch(addUser(res.data));
-      console.log(res.data);
     } catch (error) {
       setError(error?.response?.data || "Something went wrong");
       console.log(error?.response?.data);
@@ -32,12 +33,18 @@ const Feed = () => {
   }, [feed]);
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-  if (!feed?.length) return <p>Loading...</p>;
+  // if (!feed?.length) return <p>Loading...</p>;
 
-  return feed.length >= 3 ? (
-    <div><UserCard user={feed[2]} /></div>
-  ) : (
-    <p>Not enough data</p>
+  if (!feed) return;
+  if (feed.length <= 0)
+    return <p>Feed Page is empty, try again after sometime</p>;
+
+  return (
+    feed && (
+      <div>
+        <UserCard user={feed[0]} />
+      </div>
+    )
   );
 };
 

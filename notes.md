@@ -250,3 +250,40 @@ This setup ensures smooth communication between the frontend and backend in a ME
   import { BASE_URL } from "../utils/constants";
   ```
 
+
+
+<!-- Notes
+  
+
+const requestSlice = createSlice({
+    name:"request",
+    initialState: null,
+    reducers:{
+        addRequest: (state,action)=> action.payload,
+        removeRequest: (state, action) => {
+            const newArray = state.receivedRequests.filter((r)=>r._id !== action.payload);
+            return newArray;
+        }
+    }
+})
+
+  This is reducer we have created for adding data which is comming from request API into redux store. So in the removeRequest we are removing particular id which is either accepeted or ignored by user. 
+
+  In this entire process what's happening is -> At our backend we have created a API which is finding connection request id from database which user has been sent by connection request to logged in user.
+
+  toUserId: loggedInuser._id -> this is how we are finding request ID's
+
+  now in the redux store we have added this data which mongodb has found. From backend we are sending data in json format which has a key named receivedRequests. 
+
+  In this key there is data and when the user accepts the request this id which was found by mongoose will be removed because its status is been updated to accepted.
+
+  so once this request is accpeted and id has changed it's status not it's time to remove it from our redux store.
+
+  Before removing there is one important thing to notice which is when this id is had changed it's status and moongoose finds id on the basic of status and toUserId not it won't find this id which has been updated. So when we refresh webpage and again this api called will happen and again data will be filled into redux store now it won't contain this userId which we have accepted...it will be removed from requests component.
+
+  But this is where the problem is user has to refresh the page to see the change therefore we have created removeUser action into reduceres.
+
+  which takes id i.e. the document id which is has all this data as parament and now we apply filter on  const newArray = state.receivedRequests.filter((r)=> r._id !== action.payload)
+  return newArray
+
+ -->

@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 constants.js
+notes.txt
+redux state.png

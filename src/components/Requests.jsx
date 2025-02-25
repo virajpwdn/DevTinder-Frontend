@@ -2,11 +2,26 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequest } from "../store/requestSlice";
+import { addRequest, removeRequest } from "../store/requestSlice";
 
 const Requests = () => {
   const requests = useSelector((store) => store.requests);
   const dispatch = useDispatch();
+
+  const buttonHandler = async (status, id) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/review/" + status + "/" + id
+      , {}, {withCredentials:true});
+
+      console.log(res);
+      dispatch(removeRequest(id));
+    } catch (error) {
+      // TODO: store errors in state variable
+      console.log(error);
+    }
+  };
+
   const fetchData = async () => {
     try {
       const response = await axios.get(BASE_URL + "/user/requests/received", {
@@ -26,7 +41,7 @@ const Requests = () => {
 
   if (requests?.receivedRequests?.length === 0)
     return (
-      <h3 className="text-center text-sm">
+      <h3 className="text-center text-sm min-h-screen mt-10">
         {requests?.message || "No Request Found"}
       </h3>
     );
@@ -37,7 +52,7 @@ const Requests = () => {
         Connection Requests
       </h2>
       {requests?.receivedRequests?.map((elem) => {
-        const {_id, firstName, lastName, gender, age, bio, photo } =
+        const { _id, firstName, lastName, gender, age, bio, photo } =
           elem.fromUserId;
         return (
           <div key={_id} className="min-h-screen">
@@ -52,11 +67,21 @@ const Requests = () => {
               <div className="right">
                 <h2>{firstName + " " + lastName}</h2>
                 {age && gender && <h3>{gender + ", " + age}</h3>}
-                <h3>{bio}</h3>
+                <h3 className="max-w-96 text-sm">{bio}</h3>
               </div>
               <div className="card-actions items-center justify-center">
-                <button className="btn btn-primary">Ignore</button>
-                <button className="btn btn-secondary">Interested</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => buttonHandler("rejected", elem._id)}
+                >
+                  Ignore
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => buttonHandler("accepted", elem._id)}
+                >
+                  Interested
+                </button>
               </div>
             </div>
           </div>

@@ -5,7 +5,6 @@ import { data, useNavigate } from "react-router";
 import { addUser } from "../store/userSlice";
 import { BASE_URL } from "../utils/constants";
 import UserCard from "../components/UserCard";
-import Toast from "./Toast";
 
 const EditPage = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName || "");
@@ -16,6 +15,8 @@ const EditPage = ({ user }) => {
   const [skills, setSkills] = useState(user?.skills || []);
   const [photo, setPhoto] = useState(user?.photo || "");
   const [error, setError] = useState("");
+  const [response, setResponse] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,24 +40,27 @@ const EditPage = ({ user }) => {
       );
 
       dispatch(addUser(respnose.data?.data));
-      // {
-      //   <Toast message={respnose.data.message} />;
-      // }
+      setError("");
+      setShowToast(true);
+      setResponse(respnose.data.message);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
       console.log(respnose);
     } catch (error) {
       console.error(
         "Full Error Response:",
-        error.response?.message || error.message
+        error?.response?.data || error.message
       );
-      setError(error?.response?.message || "something went wrong");
+      setError(error?.response?.data || "something went wrong");
     }
   };
   return (
     <>
-      <div className="flex items-center">
-        <div className="flex items-center justify-center hero bg-base-200 min-h-screen w-[50%]">
-          <div className="hero-content flex-col lg:flex-row-reverse ">
-            <div className="card bg-base-100 w-80 max-w-sm shrink-0 shadow-2xl">
+      <div className="flex justify-center gap-10 items-center my-10">
+        <div className="flex items-center justify-center bg-base-200 min-h-screen rounded-lg">
+          <div className="hero-content flex-col lg:flex-row-reverse rounded-md">
+            <div className="card  w-80 max-w-sm shrink-0 shadow-2xl">
               <form className="card-body" onSubmit={submitHandler}>
                 <div className="form-control">
                   <label className="label">
@@ -151,14 +155,13 @@ const EditPage = ({ user }) => {
           </div>
         </div>
         <UserCard user={{ firstName, photo, lastName, age, gender, bio }} />
-        <div className="toast toast-center">
-          <div className="alert alert-info">
-            <span>Profile updated successfully.</span>
+        {showToast && response && (
+          <div className="toast toast-top toast-center">
+            <div className="alert alert-success">
+              <span>{response}</span>
+            </div>
           </div>
-          <div className="alert alert-success">
-            <span>hey</span>
-          </div>
-        </div>
+        )}
       </div>
     </>
   );

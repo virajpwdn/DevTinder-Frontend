@@ -8,23 +8,48 @@ import { BASE_URL } from "../utils/constants";
 const Login = () => {
   const [emailId, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const submitHandler = async (e) => {
+  const signupHandler = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      const res = await axios.post(BASE_URL + "/login", {
-        emailId,
-        password,
-      }, {withCredentials:true});
-      
-      setError("")
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        { firstName, lastName, emailId, password },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res.data.data));
+      setSuccess(res.data.message);
+      navigate("/profile/view");
+    } catch (error) {
+      setError(error?.response?.data?.message || "Something went wrong");
+      console.error("Signup Error:", error);
+    }
+  };
+
+  const loginHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        BASE_URL + "/login",
+        {
+          emailId,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      setError("");
       dispatch(addUser(res.data));
-      navigate("/")
-      
+      navigate("/");
+
       setEmail("");
       setPassword("");
     } catch (error) {
@@ -37,14 +62,51 @@ const Login = () => {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content flex-col lg:flex-row-reverse">
           <div className="card bg-base-100 w-80 max-w-sm shrink-0 shadow-2xl">
-            <form className="card-body" onSubmit={submitHandler}>
+            <form
+              className="card-body"
+              onSubmit={isLoggedIn ? loginHandler : signupHandler}
+            >
+              <h1 className="font-semibold text-xl text-center">
+                {isLoggedIn ? "Login" : "Sign up"}
+              </h1>
+
+              {!isLoggedIn && (
+                <>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">FirstName</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="John"
+                      className="input input-bordered"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text">LastName</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Doe"
+                      className="input input-bordered"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                    />
+                  </div>
+                </>
+              )}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
                 </label>
                 <input
                   type="email"
-                  placeholder="email"
+                  placeholder="example@mail.com"
                   className="input input-bordered"
                   value={emailId}
                   onChange={(e) => setEmail(e.target.value)}
@@ -71,8 +133,16 @@ const Login = () => {
               </div>
               <p className="text-red-500 text-xs">{error}</p>
               <div className="form-control mt-6">
-                <button className="btn btn-primary">Login</button>
+                <button className="btn btn-primary">
+                  {isLoggedIn ? "Login" : "Signup"}
+                </button>
               </div>
+              <p
+                className="text-xs cursor-pointer hover:underline text-center pt-2"
+                onClick={() => setIsLoggedIn((value) => !value)}
+              >
+                {isLoggedIn ? "New User? Sign up" : "Existing User? Login Here"}
+              </p>
             </form>
           </div>
         </div>

@@ -29,8 +29,7 @@ const Login = () => {
       setSuccess(res.data.message);
       navigate("/profile/view");
     } catch (error) {
-      setError(error?.response?.data?.message || "Something went wrong");
-      console.error("Signup Error:", error);
+      setError(error?.response?.data || "Something went wrong");
     }
   };
 

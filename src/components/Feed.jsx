@@ -30,14 +30,14 @@ const Feed = () => {
     if (!feed?.length) {
       getFeed();
     }
-  }, [feed]);
+  }, []);
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   // if (!feed?.length) return <p>Loading...</p>;
 
   if (!feed) return;
   if (feed.length <= 0)
-    return <p>Feed Page is empty, try again after sometime</p>;
+    return <p className="text-center py-10 min-h-screen">Feed Page is empty, try again after sometime</p>;
 
   return (
     feed && (

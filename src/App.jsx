@@ -9,6 +9,9 @@ import Profile from "./components/Profile";
 import Connection from "./components/Connection";
 import Requests from "./components/Requests";
 
+// New shop premium imports
+import Premium from "./shop/Premium";
+
 const App = () => {
   return (
     <>
@@ -22,6 +25,8 @@ const App = () => {
               <Route path="/profile/view" element={<Profile />} />
               <Route path="/connections" element={<Connection />} />
               <Route path="/requests" element={<Requests />} />
+              {/* New Shop Premium Routes - testing phase */}
+              <Route path="/premium" element={<Premium />} />
             </Route>
           </Routes>
         </BrowserRouter>

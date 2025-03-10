@@ -4,13 +4,12 @@ import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 
 const Chat = () => {
-  const [messages, setMessages] = useState([{ text: "hello" }]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
   const { targetId } = useParams();
   const user = useSelector((store) => store.user);
   const userId = user?._id;
-  const firstName = userId.firstName;
 
   useEffect(() => {
     if (!user) return;
@@ -19,8 +18,8 @@ const Chat = () => {
 
     socket.emit("joinChat", { targetId, userId });
 
-    socket.on("messageReceived", ({ newMessage }) => {
-      console.log(newMessage);
+    socket.on("messageReceived", ({firstName, newMessage }) => {    
+        setMessages((prev) => [...prev, {sender: firstName, text: newMessage}])
     });
 
     // After completation umMount socket
@@ -58,10 +57,10 @@ const Chat = () => {
                     </div>
                   </div>
                   <div className="chat-header">
-                    Obi-Wan Kenobi
+                    <h1>{mes.sender}</h1>
                     <time className="text-xs opacity-50">12:45</time>
                   </div>
-                  <div className="chat-bubble">You were the Chosen One!</div>
+                  <div className="chat-bubble"><h1>{mes.text}</h1></div>
                   <div className="chat-footer opacity-50">Delivered</div>
                 </div>
                 <div className="chat chat-end p-5">

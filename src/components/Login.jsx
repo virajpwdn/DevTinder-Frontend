@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 

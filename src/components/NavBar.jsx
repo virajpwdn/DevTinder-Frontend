@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../store/appStore";
 import { Link, useNavigate } from "react-router";
@@ -24,6 +24,9 @@ const NavBar = () => {
       console.log(error);
     }
   };
+  useEffect(()=>{
+    
+  },[])
   return (
     <div>
       {" "}

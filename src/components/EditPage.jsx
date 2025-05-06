@@ -58,7 +58,7 @@ const EditPage = ({ user }) => {
   };
   return (
     <>
-      <div className="flex flex-col lg:flex-row justify-center items-stretch gap-10 my-10 px-4">
+      <div className="flex flex-col items-center lg:flex-row justify-center gap-10 my-10 px-4">
         {/* Left: Form Container */}
         <div className="w-full max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center">
           <div className="w-full px-6 py-4 overflow-y-auto">

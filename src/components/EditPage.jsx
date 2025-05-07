@@ -58,104 +58,53 @@ const EditPage = ({ user }) => {
   };
   return (
     <>
-      <div className="flex justify-center gap-10 items-center my-10">
-        <div className="flex items-center justify-center bg-base-200 min-h-screen rounded-lg">
-          <div className="hero-content flex-col lg:flex-row-reverse rounded-md">
-            <div className="card  w-80 max-w-sm shrink-0 shadow-2xl">
-              <form className="card-body" onSubmit={submitHandler}>
-                <div className="form-control">
+      <div className="flex flex-col items-center lg:flex-row justify-center gap-10 my-10 px-4">
+        {/* Left: Form Container */}
+        <div className="w-full max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center">
+          <div className="w-full px-6 py-4 overflow-y-auto">
+            <form className="card-body" onSubmit={submitHandler}>
+              {[
+                {
+                  label: "First Name",
+                  value: firstName,
+                  setValue: setFirstName,
+                },
+                { label: "Last Name", value: lastName, setValue: setLastName },
+                { label: "Gender", value: gender, setValue: setGender },
+                { label: "Bio", value: bio, setValue: setBio },
+                { label: "Age", value: age, setValue: setAge },
+                { label: "Photo", value: photo, setValue: setPhoto },
+                { label: "Skills", value: skills, setValue: setSkills },
+              ].map((field, idx) => (
+                <div className="form-control" key={idx}>
                   <label className="label">
-                    <span className="label-text text-xs">FIRSTNAME</span>
+                    <span className="label-text text-xs uppercase">
+                      {field.label}
+                    </span>
                   </label>
                   <input
                     type="text"
-                    placeholder="First Name"
+                    placeholder={field.label}
                     className="input input-bordered"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={field.value}
+                    onChange={(e) => field.setValue(e.target.value)}
                   />
                 </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text text-xs">LASTNAME</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    className="input input-bordered"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text text-xs uppercase">Gender</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Gender"
-                    className="input input-bordered"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text text-xs uppercase">Bio</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Bio"
-                    className="input input-bordered"
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text text-xs uppercase">Age</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Age"
-                    className="input input-bordered"
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text text-xs uppercase">Photo</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Photo"
-                    className="input input-bordered"
-                    value={photo}
-                    onChange={(e) => setPhoto(e.target.value)}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text text-xs uppercase">Skills</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Skills"
-                    className="input input-bordered"
-                    value={skills}
-                    onChange={(e) => setSkills(e.target.value)}
-                  />
-                </div>
-                <p className="text-red-500 text-xs">{error}</p>
-                <div className="form-control mt-6">
-                  <button className="btn btn-primary">update profile</button>
-                </div>
-              </form>
-            </div>
+              ))}
+              <p className="text-red-500 text-xs">{error}</p>
+              <div className="form-control mt-6">
+                <button className="btn btn-primary">Update Profile</button>
+              </div>
+            </form>
           </div>
         </div>
-        <UserCard user={{ firstName, photo, lastName, age, gender, bio }} />
+
+        {/* Right: User Card Container */}
+        <div className="w-full max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center px-6 py-4">
+          <UserCard user={{ firstName, photo, lastName, age, gender, bio }} />
+        </div>
+
+        {/* Toast Notification */}
         {showToast && response && (
           <div className="toast toast-top toast-center">
             <div className="alert alert-success">

@@ -12,6 +12,9 @@ import Requests from "./components/Requests";
 // New shop premium imports
 import Premium from "./shop/Premium";
 
+// New Chat imports
+import Chat from "./chat/Chat";
+
 const App = () => {
   return (
     <>
@@ -27,6 +30,9 @@ const App = () => {
               <Route path="/requests" element={<Requests />} />
               {/* New Shop Premium Routes - testing phase */}
               <Route path="/premium" element={<Premium />} />
+
+              {/* New chat Routes - testing phase */}
+              <Route path="/chat/:targetId" element={<Chat />}/>
             </Route>
           </Routes>
         </BrowserRouter>

@@ -25,21 +25,25 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="card bg-base-300 w-96 shadow-xl">
-        <figure>
-          <img src={photo || "/default-avatar.png"} alt="photo" />
+    <div className="min-h-screen flex items-center justify-center px-4 py-8">
+      <div className="card bg-base-300 w-full max-w-sm shadow-xl">
+        <figure className="p-4">
+          <img
+            src={photo || "/default-avatar.png"}
+            alt="photo"
+            className="rounded-lg object-cover w-full h-64"
+          />
         </figure>
-        <div className="card-body">
-          <h2 className="card-title">{`${firstName || "Firstname"} ${
-            lastName || "LastName"
-          }`}</h2>
-          <div className="flex gap-10">
-            {age && <h2>{"Age: " + age}</h2>}
-            {gender && <h2>{"Gender: " + gender}</h2>}
+        <div className="card-body flex flex-col items-center text-center">
+          <h2 className="card-title text-lg md:text-xl">
+            {`${firstName || "Firstname"} ${lastName || "LastName"}`}
+          </h2>
+          <div className="flex flex-wrap gap-4 justify-center text-sm md:text-base mt-2">
+            {age && <span>Age: {age}</span>}
+            {gender && <span>Gender: {gender}</span>}
           </div>
-          <p>{bio || "bio"}</p>
-          <div className="card-actions justify-center">
+          <p className="mt-2">{bio || "bio"}</p>
+          <div className="card-actions justify-center mt-4 flex-wrap gap-2">
             <button
               className="btn btn-primary"
               onClick={() => buttonHandler("ignored", _id)}

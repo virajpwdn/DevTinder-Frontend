@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -57,93 +57,97 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <div className="hero bg-base-200 min-h-screen">
-        <div className="hero-content flex-col lg:flex-row-reverse">
-          <div className="card bg-base-100 w-80 max-w-sm shrink-0 shadow-2xl">
-            <form
-              className="card-body"
-              onSubmit={isLoggedIn ? loginHandler : signupHandler}
+    <div className="min-h-screen bg-base-200 flex items-center justify-center px-4">
+      <div className="hero-content flex-col lg:flex-row-reverse w-full max-w-4xl">
+        {/* Form Card */}
+        <div className="card w-full max-w-[400px] bg-base-100 shadow-2xl">
+          <form
+            className="card-body"
+            onSubmit={isLoggedIn ? loginHandler : signupHandler}
+          >
+            <h1 className="text-xl font-semibold text-center">
+              {isLoggedIn ? "Login" : "Sign up"}
+            </h1>
+  
+            {!isLoggedIn && (
+              <>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">First Name</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="John"
+                    className="input input-bordered"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Last Name</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Doe"
+                    className="input input-bordered"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
+            )}
+  
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email</span>
+              </label>
+              <input
+                type="email"
+                placeholder="example@mail.com"
+                className="input input-bordered"
+                value={emailId}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+  
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="input input-bordered"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <label className="label">
+                <a href="#" className="label-text-alt link link-hover">
+                  Forgot password?
+                </a>
+              </label>
+            </div>
+  
+            <p className="text-red-500 text-xs">{error}</p>
+  
+            <div className="form-control mt-6">
+              <button className="btn btn-primary">
+                {isLoggedIn ? "Login" : "Signup"}
+              </button>
+            </div>
+  
+            <p
+              className="text-xs text-center cursor-pointer hover:underline pt-2"
+              onClick={() => setIsLoggedIn((value) => !value)}
             >
-              <h1 className="font-semibold text-xl text-center">
-                {isLoggedIn ? "Login" : "Sign up"}
-              </h1>
-
-              {!isLoggedIn && (
-                <>
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text">FirstName</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="John"
-                      className="input input-bordered"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text">LastName</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Doe"
-                      className="input input-bordered"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </>
-              )}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Email</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="example@mail.com"
-                  className="input input-bordered"
-                  value={emailId}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Password</span>
-                </label>
-                <input
-                  type="password"
-                  placeholder="password"
-                  className="input input-bordered"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <label className="label">
-                  <a href="#" className="label-text-alt link link-hover">
-                    Forgot password?
-                  </a>
-                </label>
-              </div>
-              <p className="text-red-500 text-xs">{error}</p>
-              <div className="form-control mt-6">
-                <button className="btn btn-primary">
-                  {isLoggedIn ? "Login" : "Signup"}
-                </button>
-              </div>
-              <p
-                className="text-xs cursor-pointer hover:underline text-center pt-2"
-                onClick={() => setIsLoggedIn((value) => !value)}
-              >
-                {isLoggedIn ? "New User? Sign up" : "Existing User? Login Here"}
-              </p>
-            </form>
-          </div>
+              {isLoggedIn ? "New User? Sign up" : "Existing User? Login Here"}
+            </p>
+          </form>
         </div>
       </div>
     </div>

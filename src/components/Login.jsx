@@ -47,7 +47,7 @@ const Login = () => {
 
       setError("");
       dispatch(addUser(res.data));
-      navigate("/");
+      navigate("/feed");
 
       setEmail("");
       setPassword("");

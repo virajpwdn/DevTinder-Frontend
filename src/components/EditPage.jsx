@@ -47,7 +47,7 @@ const EditPage = ({ user }) => {
         setShowToast(false);
       }, 3000);
       console.log(respnose);
-      // navigate("/");
+      navigate("/feed");
     } catch (error) {
       console.error(
         "Full Error Response:",

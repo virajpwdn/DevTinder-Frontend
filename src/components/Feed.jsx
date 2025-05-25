@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser, removeUser } from "../store/feedSlice";
 import store from "../store/appStore";
 import UserCard from "./UserCard";
+import Shimmer from "./Shimmer";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  
 
   const getFeed = async () => {
     try {
@@ -35,9 +37,8 @@ const Feed = () => {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   // if (!feed?.length) return <p>Loading...</p>;
 
-  if (!feed) return;
-  if (feed.length <= 0)
-    return <p className="text-center py-10 min-h-screen">Feed Page is empty, try again after sometime</p>;
+  if (!feed) return <Shimmer />;
+  if (feed.length <= 0) return <Shimmer />;
 
   return (
     feed && (

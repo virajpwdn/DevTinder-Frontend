@@ -34,7 +34,7 @@ const Requests = () => {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [requests]);
 
   if (!requests) return;
 

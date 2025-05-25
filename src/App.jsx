@@ -14,6 +14,7 @@ import Premium from "./shop/Premium";
 
 // New Chat imports
 import Chat from "./chat/Chat";
+import Hero from "./components/Hero";
 
 const App = () => {
   return (
@@ -21,8 +22,9 @@ const App = () => {
       <Provider store={appStore}>
         <BrowserRouter basename="/">
           <Routes>
+            <Route path="/" element={<Hero />} />
             <Route path="/" element={<Body />}>
-              <Route path="/" element={<Feed />} />
+              <Route path="/feed" element={<Feed />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile/view" element={<Profile />} />
@@ -32,7 +34,7 @@ const App = () => {
               <Route path="/premium" element={<Premium />} />
 
               {/* New chat Routes - testing phase */}
-              <Route path="/chat/:targetId" element={<Chat />}/>
+              <Route path="/chat/:targetId" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>

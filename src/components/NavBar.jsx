@@ -19,17 +19,20 @@ const NavBar = () => {
         { withCredentials: true }
       );
       dispatch(removeUser());
-      navigate("/login");
+      // navigate("/login");
+      window.location.href = "/login"
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {}, []);
+  // useEffect(() => {}, []);
+  /* if user is authenticated then redirect him to feed else / page */
+  const logoPath = user ? "/feed" : "/"
   return (
     <div>
       <div className="navbar bg-base-300">
         <div className="flex-1">
-          <Link to="/" className="btn btn-ghost text-xl">
+          <Link to={logoPath} className="btn btn-ghost text-xl">
             👨🏻‍💻 DevTinder
           </Link>
         </div>

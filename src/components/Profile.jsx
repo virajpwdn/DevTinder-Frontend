@@ -6,6 +6,7 @@ import store from "../store/appStore";
 
 const Profile = () => {
   const user = useSelector((store) => store.user);
+  console.log("USER -> ", user)
   return user && <div>{<EditPage user={user} />}</div>;
 };
 

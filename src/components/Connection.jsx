@@ -19,6 +19,7 @@ const Connection = () => {
     } catch (error) {
       console.log(error);
       //   TODO: create state variable for errors
+      // Add a winston logger
     }
   };
   console.log("Redux State:", connection?.data); // Debugging
@@ -28,13 +29,17 @@ const Connection = () => {
   }, []);
 
   if (!connection) return;
-  if (connection?.data?.length === 0) return <h1>No Connections Found</h1>;
+  if (connection?.data?.length === 0)
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <h1>No Connections Found</h1>
+      </div>
+    );
 
-  
   return (
     <div className="min-h-screen bg-gray-900 px-4 py-6 text-white">
       <h1 className="text-3xl font-bold text-center mb-8">Connections</h1>
-  
+
       <div className="space-y-6 max-w-3xl mx-auto">
         {connection.data.map((elem) => {
           const { _id, firstName, lastName, gender, photo, age, bio } = elem;
@@ -49,18 +54,20 @@ const Connection = () => {
                   src={photo}
                   alt="photo"
                 />
-  
+
                 <div className="flex flex-col">
                   <h2 className="text-xl font-semibold">
                     {firstName} {lastName}
                   </h2>
                   {gender && age && (
-                    <p className="text-sm text-gray-300">{gender}, {age}</p>
+                    <p className="text-sm text-gray-300">
+                      {gender}, {age}
+                    </p>
                   )}
                   <p className="text-sm text-gray-400">{bio}</p>
                 </div>
               </div>
-  
+
               <div className="mt-4 sm:mt-0">
                 <Link to={`/chat/${_id}`}>
                   <button className="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 transition rounded-lg text-sm font-medium shadow">

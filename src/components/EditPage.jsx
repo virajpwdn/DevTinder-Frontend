@@ -5,6 +5,7 @@ import { data, useNavigate } from "react-router";
 import { addUser } from "../store/userSlice";
 import { BASE_URL } from "../utils/constants";
 import UserCard from "../components/UserCard";
+import { truncateText } from "../utils/truncateText";
 
 const EditPage = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName || "");
@@ -58,7 +59,7 @@ const EditPage = ({ user }) => {
   };
   return (
     <>
-      <div className="flex flex-col items-center lg:flex-row justify-center gap-10 my-10 px-4">
+      <div className="min-h-screen flex flex-col items-center lg:flex-row justify-center gap-10 my-10 px-4">
         {/* Left: Form Container */}
         <div className="w-full max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center">
           <div className="w-full px-6 py-4 overflow-y-auto">
@@ -87,7 +88,7 @@ const EditPage = ({ user }) => {
                     placeholder={field.label}
                     className="input input-bordered"
                     value={field.value}
-                    onChange={(e) => field.setValue(e.target.value)}
+                    onChange={(e) => field.setValue(truncateText(e.target.value))}
                   />
                 </div>
               ))}
@@ -100,7 +101,7 @@ const EditPage = ({ user }) => {
         </div>
 
         {/* Right: User Card Container */}
-        <div className="w-full max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center px-6 py-4">
+        <div className="w-full h-[792px] max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center px-6 py-4">
           <UserCard user={{ firstName, photo, lastName, age, gender, bio }} />
         </div>
 

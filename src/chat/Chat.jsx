@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createConnection } from "../utils/socket";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
@@ -8,139 +8,224 @@ import { BASE_URL } from "../utils/constants";
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const { targetId } = useParams();
   const user = useSelector((store) => store.user);
   const userId = user?._id;
-//   console.log(user?.firstName);
+  const messagesEndRef = useRef(null);
+  const socketRef = useRef(null);
 
+  // Scroll to bottom when messages change
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const fetchChatMessages = async () => {
     try {
+      setIsLoading(true);
+      setError("");
       const response = await axios.get(
         BASE_URL + "/chat/getallchat/" + targetId,
         { withCredentials: true }
       );
-
-      //   console.log(response.data?.chat?.messages[0].senderId.firstName);
-      setMessages(response?.data?.chat?.messages);
-      //   console.log(response.data.chat.messages[0].timestamp);
-      console.log(response.data?.chat?.messages[0].timestamp);
-
-      console.log(user?.firstName);
-
-
-      const chatMessages = response?.data?.messages?.map((msg) => {
-        const { senderId, text } = msg;
-        return {
-          firstName: senderId?.firstName || "unknown",
-          lastName: senderId?.lastName || "unknow",
-          text,
-        };
-      });
-      //   setMessages(chatMessages);
-      //   console.log(chatMessages);
-    //   TODO: fix this when user.chat does not exits then ui should have new conversation text?
-    // TODO: Fix why messages sent are show on left instead of right coz after refresh it shifts but not in realtime why"
-      //   if (response.data?.chat.chat === null) {
-      //     setMessages([]);
-      //   }
-
-      //   setMessages(response.data?.chat);
+      setMessages(response?.data?.chat?.messages || []);
     } catch (error) {
       console.error(error);
+      setError("Failed to load messages");
+      setMessages([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // Fetch messages on component mount or targetId change
   useEffect(() => {
-    if (messages.length === 0) {
-      fetchChatMessages();
-    }
+    fetchChatMessages();
   }, [targetId]);
-//   messages, user, newMessage, 
 
+  // Setup socket connection
   useEffect(() => {
-    if (!user) return;
-    // Whenver page loads mount the socket
-    const socket = createConnection();
+    if (!user || !userId || !targetId) return;
 
-    socket.emit("joinChat", { targetId, userId });
+    socketRef.current = createConnection();
+    socketRef.current.emit("joinChat", { targetId, userId });
 
-    socket.on("messageReceived", ({ firstName, newMessage }) => {
-      setMessages((prev) => [
-        ...prev,
-        { senderId: firstName, text: newMessage },
-      ]);
+    // Only add messages from OTHER users (not yourself)
+    socketRef.current.on("messageReceived", (data) => {
+      // Check if this message is from the other person, not from yourself
+      if (data.userId !== userId) {
+        console.log("DATA FROM SERVER ", data);
+        setMessages((prev) => [
+          ...prev,
+          {
+            senderId: {
+              _id: data.userId,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              photo: data.photo,
+            },
+            text: data.newMessage,
+            timestamp: new Date().toISOString(),
+          },
+        ]);
+      }
     });
 
-    // console.log(messages);
-
-    // After completation umMount socket
     return () => {
-      socket.disconnect();
+      socketRef.current?.disconnect();
     };
-  }, [userId, targetId]);
-//   messages, user, newMessage
+  }, [userId, targetId, user]);
 
   const setMessageHandler = () => {
-    const socket = createConnection();
+    if (!newMessage.trim()) return;
 
-    socket.emit("sendMessage", {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      userId: userId,
-      targetId,
-      newMessage,
-    });
+    if (socketRef.current) {
+      socketRef.current.emit("sendMessage", {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        userId: userId,
+        targetId,
+        newMessage,
+      });
 
-    setNewMessage("")
+      // Add message to local state immediately for better UX
+      // This is your message, so it shows on the right
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          senderId: {
+            _id: userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+          },
+          text: newMessage,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+
+      setNewMessage("");
+    }
   };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      setMessageHandler();
+    }
+  };
+
+  const formatTime = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  if (isLoading && messages.length === 0) {
+    return (
+      <div className="p-10 min-h-screen flex items-center justify-center">
+        <p className="text-zinc-400">Loading messages...</p>
+      </div>
+    );
+  }
+
+  if (error && messages.length === 0) {
+    return (
+      <div className="p-10 min-h-screen flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-10 min-h-screen flex items-center justify-start flex-col">
       <h1 className="text-3xl text-left mb-5 font-bold text-zinc-400">Chat</h1>
-      <div className="w-3/4 border border-zinc-300 rounded-md h-[75vh] overflow-scroll relative">
-        {messages && user &&
-          messages?.map((mes, idx) => {
-            return (
-              <div key={idx} className="message-bubble-container">
-                <div className={`chat ${mes?.senderId?.firstName === user?.firstName ? "chat-end" : "chat-start"} p-5`}>
-                  <div className="chat-image avatar">
-                    <div className="w-10 rounded-full">
-                      <img
-                        alt="Tailwind CSS chat bubble component"
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      />
+
+      <div className="w-full max-w-4xl border border-zinc-300 rounded-md h-[75vh] flex flex-col bg-zinc-900">
+        {/* Messages Container */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+          {messages.length === 0 ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-zinc-500">
+                No messages yet. Start a conversation!
+              </p>
+            </div>
+          ) : (
+            messages.map((mes, idx) => {
+              const isOwnMessage = mes?.senderId?._id === userId;
+              return (
+                <div
+                  key={idx}
+                  className={`flex ${
+                    isOwnMessage ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`chat ${
+                      isOwnMessage ? "chat-end" : "chat-start"
+                    }`}
+                  >
+                    <div className="chat-image avatar">
+                      <div className="w-10 rounded-full">
+                        <img
+                          alt="User avatar"
+                          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                        />
+                      </div>
+                    </div>
+                    <div className="chat-header">
+                      <h1 className="font-semibold">
+                        {mes?.senderId?.firstName}
+                      </h1>
+                      {user?.isPremium === true && (
+                        <span className="ml-1">✅</span>
+                      )}
+                      <time className="text-xs opacity-50 ml-2">
+                        {formatTime(mes?.timestamp)}
+                      </time>
+                    </div>
+                    <div
+                      className={`chat-bubble ${
+                        isOwnMessage
+                          ? "bg-emerald-600 text-white"
+                          : "bg-zinc-700 text-zinc-100"
+                      }`}
+                    >
+                      <p>{mes?.text}</p>
                     </div>
                   </div>
-                  <div className="chat-header">
-                    <h1>{mes?.senderId?.firstName}</h1>
-                    <span>{user?.isPremium === true? "✅": ""}</span>
-                    <time className="text-xs opacity-50">11/3/25</time>
-                  </div>
-                  <div className="chat-bubble">
-                    <h1>{mes?.text}</h1>
-                  </div>
-                  <div className="chat-footer opacity-50">Delivered</div>
                 </div>
-              </div>
-            );
-          })}
-        <div className="send-div flex justify-between p-10 absolute bottom-0 w-full gap-4">
+              );
+            })
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input Container */}
+        <div className="border-t border-zinc-300 p-5 flex gap-4 bg-zinc-800">
           <input
             value={newMessage}
-            onChange={(e) => {
-              setNewMessage(e.target.value);
-            }}
+            onChange={(e) => setNewMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
             type="text"
-            className="w-full bg-transparent border border-r-zinc-400 rounded-md p-2 outline-none placeholder:text-zinc-500"
-            placeholder="Enter your message"
+            className="flex-1 bg-zinc-700 border border-zinc-600 rounded-md p-3 outline-none text-white placeholder:text-zinc-400"
+            placeholder="Enter your message..."
           />
           <button
             onClick={setMessageHandler}
-            className="px-4 py-1.5 bg-emerald-500 text-white rounded-md"
+            disabled={!newMessage.trim()}
+            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            send
+            Send
           </button>
         </div>
       </div>

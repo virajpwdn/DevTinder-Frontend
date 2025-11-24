@@ -25,7 +25,7 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8">
+    <div className="h-[768px] w-full flex items-center justify-center px-4 py-8">
       <div className="card bg-base-300 w-full max-w-sm shadow-xl">
         <figure className="p-4">
           <img

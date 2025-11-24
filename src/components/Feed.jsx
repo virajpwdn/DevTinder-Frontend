@@ -10,11 +10,12 @@ import Shimmer from "./Shimmer";
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
-  
 
   const getFeed = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.get(BASE_URL + "/user/feed", {
         withCredentials: true,
       });
@@ -25,6 +26,8 @@ const Feed = () => {
     } catch (error) {
       setError(error?.response?.data || "Something went wrong");
       console.log(error?.response?.data);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -34,15 +37,17 @@ const Feed = () => {
     }
   }, []);
 
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-  // if (!feed?.length) return <p>Loading...</p>;
+  if (isLoading) return <Shimmer />;
 
-  if (!feed) return <Shimmer />;
-  if (feed.length <= 0) return <Shimmer />;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
+
+  if (!feed || feed.length === 0) {
+    return <p className="text-center text-gray-500">No more users to show</p>;
+  }
 
   return (
     feed && (
-      <div>
+      <div className="min-h-screen flex items-center justify-center">
         <UserCard user={feed[0]} />
       </div>
     )

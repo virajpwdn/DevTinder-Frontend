@@ -1,4 +1,10 @@
 const Hello = () => {
-  return <div>Hello World</div>;
+  return (
+    <div>
+      <h1>Hello World</h1>
+      <button>submit</button>
+      <button>test</button>
+    </div>
+  );
 };
 export default Hello;

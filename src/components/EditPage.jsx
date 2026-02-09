@@ -1,11 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { data, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { addUser } from "../store/userSlice";
 import { BASE_URL } from "../utils/constants";
 import UserCard from "../components/UserCard";
 import { truncateText } from "../utils/truncateText";
+import PropTypes from 'prop-types';
 
 const EditPage = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName || "");
@@ -118,4 +119,17 @@ const EditPage = ({ user }) => {
   );
 };
 
+EditPage.propTypes = {
+  user: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    gender: PropTypes.string,
+    age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    bio: PropTypes.string,
+    skills: PropTypes.array,
+    photo: PropTypes.string,
+  }),
+};
+
 export default EditPage;
+

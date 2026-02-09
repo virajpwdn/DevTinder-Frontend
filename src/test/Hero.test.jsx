@@ -18,17 +18,27 @@ describe("Hero", () => {
     expect(getStarted).toBeInTheDocument();
   });
 
-  it("should redirect to login page", async () => {
-    const user = userEvent.setup();
-    render(
+  it("should redirect to login page when any get started button is clicked", async () => {
+    const { unmount } = render(
       <BrowserRouter>
         <Hero />
       </BrowserRouter>,
     );
+    const loginButton = screen.getAllByRole("button", {
+      name: /get started/i,
+    });
 
-    const loginButton = screen.getAllByRole("button", { name: "Get started" });
-    await user.click(loginButton[0]);
+    for (let i = 0; i < loginButton.length; i++) {
+      const user = userEvent.setup();
 
-    expect(window.location.pathname).toBe("/login");
+      const currentButton = screen.getAllByRole("button", {
+        name: /get started/i,
+      })[0];
+
+      await user.click(currentButton);
+      expect(window.location.pathname).toBe("/login");
+
+      unmount();
+    }
   });
 });

@@ -4,7 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/feedSlice";
 
-const UserCard = ({ user }) => {
+const  UserCard = ({ user }) => {
   const { _id, firstName, photo, lastName, age, gender, bio } = user;
   const dispatch = useDispatch();
 

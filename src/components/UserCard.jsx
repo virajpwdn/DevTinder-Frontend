@@ -3,17 +3,19 @@ import React from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/feedSlice";
+import { useNavigate } from "react-router";
 
-const UserCard = ({ user }) => {
-  const { _id, firstName, photo, lastName, age, gender, bio } = user;
+const UserCard = ( prop ) => {
+  const { _id, firstName, photo, lastName, age, gender, bio } = prop.user;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const buttonHandler = async (status, userId) => {
     try {
       const response = await axios.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
 
       dispatch(removeUser(userId));
@@ -26,7 +28,10 @@ const UserCard = ({ user }) => {
 
   return (
     <div className="h-[768px] w-full flex items-center justify-center px-4 py-8">
-      <div className="card bg-base-300 w-full max-w-sm shadow-xl">
+      <div
+        className="card bg-base-300 w-full max-w-sm shadow-xl"
+        onClick={() => {navigate("/")}}
+      >
         <figure className="p-4">
           <img
             src={photo || "/default-avatar.png"}

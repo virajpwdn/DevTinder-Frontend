@@ -8,6 +8,7 @@ import UserCard from "../components/UserCard";
 import { truncateText } from "../utils/truncateText";
 import PropTypes from "prop-types";
 import { RiUpload2Fill } from "@remixicon/react";
+import imgHeicToJpegConvert from "../utils/heicConvert";
 
 const EditPage = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName || "");
@@ -67,7 +68,6 @@ const EditPage = ({ user }) => {
     }
   };
 
-
   const handleDragOver = (e) => {
     e.preventDefault();
     setDragOver(true);
@@ -82,30 +82,20 @@ const EditPage = ({ user }) => {
     handleFiles(droppedFile);
   };
 
-  const handleFiles = (selectedFile) => {
+  const handleFiles = async (selectedFile) => {
     console.log("selected file ", selectedFile);
     if (!selectedFile) return;
-    // if (!selectedFile.type.startsWith("image/*"))
-    //   return alert("You can only upload images");
-    if (selectedFile.length > 6)
+    if (selectedFile.length > 6 || images.length > 5)
       return alert("You can only upload upto 6 images");
 
-    const imageFiles = selectedFile.filter((f) =>
-      f.type.startsWith("image/"),
-    );
-
-    const newImages = imageFiles.map((file) => ({
-      id: crypto.randomUUID(),
-      file,
-      preview: URL.createObjectURL(file),
-    }));
+    const imageFiles = await imgHeicToJpegConvert(selectedFile);
 
     setImages((prev) => {
-      return [...prev, ...newImages];
+      return [...prev, ...imageFiles];
     });
 
     setFile(selectedFile);
-    setPreview(newImages);
+    setPreview(imageFiles);
     console.log("selected file url", imageFiles);
   };
 

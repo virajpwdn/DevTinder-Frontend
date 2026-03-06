@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/feedSlice";
 import { useNavigate } from "react-router";
 
-const UserCard = ( prop ) => {
+const UserCard = (prop) => {
   const { _id, firstName, photo, lastName, age, gender, bio } = prop.user;
+  const isPhotoUpload = prop.isPhotoUpload;
+  const images = prop.images;
+  console.log("IMGAES ", images);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,39 +31,75 @@ const UserCard = ( prop ) => {
 
   return (
     <div className="h-[768px] w-full flex items-center justify-center px-4 py-8">
+      {/* Wrapper — this is what rotates */}
       <div
-        className="card bg-base-300 w-full max-w-sm shadow-xl"
-        onClick={() => {navigate("/")}}
+        className="w-full max-w-sm"
+        style={{
+          transition: "transform 0.6s ease",
+          transform: isPhotoUpload ? "rotateY(180deg)" : "rotateY(0deg)",
+          transformStyle: "preserve-3d",
+          position: "relative",
+          height: "500px",
+        }}
       >
-        <figure className="p-4">
-          <img
-            src={photo || "/default-avatar.png"}
-            alt="photo"
-            className="rounded-lg object-cover w-full h-64"
-          />
-        </figure>
-        <div className="card-body flex flex-col items-center text-center">
-          <h2 className="card-title text-lg md:text-xl">
-            {`${firstName || "Firstname"} ${lastName || "LastName"}`}
-          </h2>
-          <div className="flex flex-wrap gap-4 justify-center text-sm md:text-base mt-2">
-            {age && <span>Age: {age}</span>}
-            {gender && <span>Gender: {gender}</span>}
+        {/* FRONT FACE */}
+        <div
+          className="card bg-base-300 w-full shadow-xl absolute inset-0"
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <figure className="p-4">
+            <img
+              src={photo || "/default-avatar.png"}
+              alt="photo"
+              className="rounded-lg object-cover w-full h-64"
+            />
+          </figure>
+          <div className="card-body flex flex-col items-center text-center">
+            <h2 className="card-title text-lg md:text-xl">
+              {`${firstName || "Firstname"} ${lastName || "LastName"}`}
+            </h2>
+            <div className="flex flex-wrap gap-4 justify-center text-sm md:text-base mt-2">
+              {age && <span>Age: {age}</span>}
+              {gender && <span>Gender: {gender}</span>}
+            </div>
+            <p className="mt-2">{bio || "bio"}</p>
+            <div className="card-actions justify-center mt-4 flex-wrap gap-2">
+              <button
+                className="btn btn-primary"
+                onClick={() => buttonHandler("ignored", _id)}
+              >
+                Ignored
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={() => buttonHandler("interested", _id)}
+              >
+                Interested
+              </button>
+            </div>
           </div>
-          <p className="mt-2">{bio || "bio"}</p>
-          <div className="card-actions justify-center mt-4 flex-wrap gap-2">
-            <button
-              className="btn btn-primary"
-              onClick={() => buttonHandler("ignored", _id)}
-            >
-              Ignored
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => buttonHandler("interested", _id)}
-            >
-              Interested
-            </button>
+        </div>
+
+        {/* BACK FACE */}
+        <div
+          className="card bg-base-300 w-full p-5 shadow-xl absolute inset-0"
+          style={{
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+        >
+          <div className="h-32 w-full rounded-md grid col-span-2 grid-cols-2 justify-items-center gap-3">
+            {images?.map((item, idx) => {
+              console.log("first", item);
+              return (
+                <img
+                  key={idx}
+                  src={item.preview}
+                  alt="house"
+                  className="h-32 w-32 rounded-md object-cover"
+                />
+              );
+            })}
           </div>
         </div>
       </div>

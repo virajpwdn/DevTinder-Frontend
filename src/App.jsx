@@ -10,10 +10,10 @@ import Connection from "./components/Connection";
 import Requests from "./components/Requests";
 
 // New shop premium imports
-import Premium from "./shop/Premium";
+import Premium from "./components/shop/Premium";
 
 // New Chat imports
-import Chat from "./chat/Chat";
+import Chat from "./components/chat/Chat";
 import Hero from "./components/Hero";
 
 const App = () => {

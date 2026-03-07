@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnection } from "../store/connectionsSlice";
-import store from "../store/appStore";
-import Chat from "../chat/Chat";
+// import store from "../store/appStore";
+// import Chat from "../chat/Chat";
 import { Link } from "react-router";
 
 const Connection = () => {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
-import { createConnection } from "../utils/socket";
+import { createConnection } from "../../utils/socket";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { BASE_URL } from "../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -31,7 +31,7 @@ const Chat = () => {
       setError("");
       const response = await axios.get(
         BASE_URL + "/chat/getallchat/" + targetId,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setMessages(response?.data?.chat?.messages || []);
     } catch (error) {

@@ -9,6 +9,14 @@ import { truncateText } from "../utils/truncateText";
 import PropTypes from "prop-types";
 import { RiUpload2Fill } from "@remixicon/react";
 import imgHeicToJpegConvert from "../utils/heicConvert";
+import {
+  ImageKitAbortError,
+  ImageKitInvalidRequestError,
+  ImageKitServerError,
+  ImageKitUploadNetworkError,
+  upload,
+} from "@imagekit/react";
+import AuthService from "../service/auth.service";
 
 const EditPage = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName || "");
@@ -26,6 +34,7 @@ const EditPage = ({ user }) => {
   const [preview, setPreview] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [images, setImages] = useState([]);
+  const [fileUploadProgress, setFileUploadProgress] = useState({});
 
   const fileInputRef = useRef();
 
@@ -89,10 +98,47 @@ const EditPage = ({ user }) => {
       return alert("You can only upload upto 6 images");
 
     const imageFiles = await imgHeicToJpegConvert(selectedFile);
-
     setImages((prev) => {
       return [...prev, ...imageFiles];
     });
+
+    const abortController = new AbortController();
+
+    try {
+      console.log("IMAGES - ", images);
+      const uploadImagesPromise = selectedFile.map(async (file) => {
+        const authParams = await AuthService.getImageKitToken();
+        console.log("FILE - ", file);
+        return upload({
+          ...authParams,
+          file,
+          fileName: file.name,
+          onProgress: (event) => {
+            setFileUploadProgress((prev) => ({
+              ...prev,
+              [file.name]: Math.round((event.loaded / event.total) * 100),
+            }));
+          },
+          abortSignal: abortController.signal,
+        });
+      });
+
+      const results = await Promise.all(uploadImagesPromise);
+      console.log("RESULTS - ", results);
+    } catch (error) {
+      if (error instanceof ImageKitAbortError) {
+        console.error("Upload aborted:", error.reason);
+      } else if (error instanceof ImageKitInvalidRequestError) {
+        console.error("Invalid request:", error.message);
+      } else if (error instanceof ImageKitUploadNetworkError) {
+        console.error("Network error:", error.message);
+      } else if (error instanceof ImageKitServerError) {
+        console.error("Server error:", error.message);
+      } else {
+        console.error("Failed to authenticate for upload:", error);
+      }
+      return;
+    }
 
     setFile(selectedFile);
     setPreview(imageFiles);
@@ -208,7 +254,6 @@ const EditPage = ({ user }) => {
                     multiple
                     ref={fileInputRef}
                     onChange={(e) => {
-                      console.log("Event ", e);
                       handleFiles(Array.from(e.target.files));
                     }}
                   />

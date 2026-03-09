@@ -35,8 +35,10 @@ const EditPage = ({ user }) => {
   const [dragOver, setDragOver] = useState(false);
   const [images, setImages] = useState([]);
   const [fileUploadProgress, setFileUploadProgress] = useState({});
+  const [imgMetadata, setImgMetadata] = useState([]);
 
   const fileInputRef = useRef();
+  const abortControllerRef = useRef(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -94,37 +96,79 @@ const EditPage = ({ user }) => {
   const handleFiles = async (selectedFile) => {
     console.log("selected file ", selectedFile);
     if (!selectedFile) return;
-    if (selectedFile.length > 6 || images.length > 5)
+    if (selectedFile.length + images.length > 6)
       return alert("You can only upload upto 6 images");
 
     const imageFiles = await imgHeicToJpegConvert(selectedFile);
-    setImages((prev) => {
-      return [...prev, ...imageFiles];
-    });
+    setImages((prev) => [...prev, ...imageFiles]);
+    setPreview(imageFiles);
 
-    const abortController = new AbortController();
+    abortControllerRef.current = new AbortController();
 
     try {
-      console.log("IMAGES - ", images);
-      const uploadImagesPromise = selectedFile.map(async (file) => {
+      console.log("IMAGES - ", imageFiles);
+      const uploadImagesPromise = imageFiles.map(async (file) => {
         const authParams = await AuthService.getImageKitToken();
-        console.log("FILE - ", file);
-        return upload({
-          ...authParams,
-          file,
-          fileName: file.name,
-          onProgress: (event) => {
-            setFileUploadProgress((prev) => ({
-              ...prev,
-              [file.name]: Math.round((event.loaded / event.total) * 100),
-            }));
-          },
-          abortSignal: abortController.signal,
-        });
+
+        try {
+          const result = await upload({
+            ...authParams,
+            file: file.file,
+            fileName: file.file.name,
+            onProgress: (event) => {
+              setFileUploadProgress((prev) => ({
+                ...prev,
+                [file.name]: Math.round((event.loaded / event.total) * 100),
+              }));
+            },
+            abortSignal: abortControllerRef.current.signal,
+          });
+
+          return {
+            status: "fulfilled",
+            fileName: file.file.name,
+            value: result,
+          };
+        } catch (error) {
+          return {
+            status: "rejected",
+            fileName: file.file.name,
+            reason: error,
+          };
+        }
       });
 
       const results = await Promise.all(uploadImagesPromise);
-      console.log("RESULTS - ", results);
+      console.log("RESULTS ", results)
+      const succeed = results.filter((r) => r.status === "fulfilled");
+      const failed = results.filter((r) => r.status === "rejected");
+
+      setImgMetadata((prev) => [
+        ...prev,
+        ...succeed.map((img) => ({
+          filePath: img.value.filePath,
+          fileId: img.value.fileId,
+          fileType: img.value.fileType,
+          height: img.value.height,
+          width: img.value.width,
+          url: img.value.url,
+          size: img.value.size,
+        })),
+      ]);
+
+      setFile(selectedFile);
+
+      if (failed.length > 0) {
+        const failedFileNames = new Set(failed.map((r) => r.fileName));
+        console.log("file names - ", failedFileNames)
+        alert(`${failed.length} image(s) failed to upload, ${failed[0].reason}`);
+
+        setImages((prev) =>
+          prev.filter((img) => !failedFileNames.has(img.name)),
+        );
+      }
+
+      console.log("selected file url", imageFiles);
     } catch (error) {
       if (error instanceof ImageKitAbortError) {
         console.error("Upload aborted:", error.reason);
@@ -139,10 +183,6 @@ const EditPage = ({ user }) => {
       }
       return;
     }
-
-    setFile(selectedFile);
-    setPreview(imageFiles);
-    console.log("selected file url", imageFiles);
   };
 
   return (

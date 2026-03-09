@@ -45,10 +45,20 @@ const Feed = () => {
     return <p className="text-center text-gray-500">No more users to show</p>;
   }
 
+  const formData = {
+    firstName: feed[0]?.firstName,
+    lastName: feed[0]?.lastName,
+    gender: feed[0]?.gender,
+    age: feed[0].age,
+    bio: feed[0]?.bio,
+    skills: feed[0]?.skills,
+    photo: feed[0]?.photo,
+  };
+
   return (
     feed && (
       <div className="min-h-screen flex items-center justify-center">
-        <UserCard user={feed[0]} />
+        <UserCard formData={formData} />
       </div>
     )
   );

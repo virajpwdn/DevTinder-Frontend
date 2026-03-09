@@ -19,19 +19,20 @@ import {
 import AuthService from "../service/auth.service";
 
 const EditPage = ({ user }) => {
-  const [firstName, setFirstName] = useState(user?.firstName || "");
-  const [lastName, setLastName] = useState(user?.lastName || "");
-  const [gender, setGender] = useState(user?.gender || "");
-  const [age, setAge] = useState(user?.age || "");
-  const [bio, setBio] = useState(user?.bio || "");
-  const [skills, setSkills] = useState(user?.skills || []);
-  const [photo, setPhoto] = useState(user?.photo || "");
+  const [formData, setFormData] = useState({
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    gender: user?.gender || "",
+    age: user?.age || "",
+    bio: user?.bio || "",
+    skills: user?.skills || [],
+    photo: user?.photo || "",
+  });
+
   const [error, setError] = useState("");
   const [response, setResponse] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isPhotoUpload, setIsPhotoUpload] = useState(false);
-  const [file, setFile] = useState("");
-  const [preview, setPreview] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [images, setImages] = useState([]);
   const [fileUploadProgress, setFileUploadProgress] = useState({});
@@ -46,17 +47,17 @@ const EditPage = ({ user }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const ageAsNumber = age ? parseInt(age, 10) : null;
+      const ageAsNumber = formData.age ? parseInt(formData.age, 10) : null;
       const respnose = await axios.patch(
         BASE_URL + "/profile/edit",
         {
-          firstName,
-          lastName,
-          gender,
-          bio,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          gender: formData.gender,
+          bio: formData.bio,
           age: ageAsNumber,
-          photo,
-          skills,
+          photo: formData.photo,
+          skills: formData.skills,
         },
         { withCredentials: true },
       );
@@ -101,7 +102,6 @@ const EditPage = ({ user }) => {
 
     const imageFiles = await imgHeicToJpegConvert(selectedFile);
     setImages((prev) => [...prev, ...imageFiles]);
-    setPreview(imageFiles);
 
     abortControllerRef.current = new AbortController();
 
@@ -139,10 +139,11 @@ const EditPage = ({ user }) => {
       });
 
       const results = await Promise.all(uploadImagesPromise);
-      console.log("RESULTS ", results)
+      console.log("RESULTS ", results);
       const succeed = results.filter((r) => r.status === "fulfilled");
       const failed = results.filter((r) => r.status === "rejected");
 
+      // Preparing Payload for POST api
       setImgMetadata((prev) => [
         ...prev,
         ...succeed.map((img) => ({
@@ -156,12 +157,12 @@ const EditPage = ({ user }) => {
         })),
       ]);
 
-      setFile(selectedFile);
-
       if (failed.length > 0) {
         const failedFileNames = new Set(failed.map((r) => r.fileName));
-        console.log("file names - ", failedFileNames)
-        alert(`${failed.length} image(s) failed to upload, ${failed[0].reason}`);
+        console.log("file names - ", failedFileNames);
+        alert(
+          `${failed.length} image(s) failed to upload, ${failed[0].reason}`,
+        );
 
         setImages((prev) =>
           prev.filter((img) => !failedFileNames.has(img.name)),
@@ -208,19 +209,27 @@ const EditPage = ({ user }) => {
                 {[
                   {
                     label: "First Name",
-                    value: firstName,
-                    setValue: setFirstName,
+                    value: formData.firstName,
+                    name: "firstName",
                   },
                   {
                     label: "Last Name",
-                    value: lastName,
-                    setValue: setLastName,
+                    value: formData.lastName,
+                    name: "lastName",
                   },
-                  { label: "Gender", value: gender, setValue: setGender },
-                  { label: "Bio", value: bio, setValue: setBio },
-                  { label: "Age", value: age, setValue: setAge },
-                  { label: "Photo", value: photo, setValue: setPhoto },
-                  { label: "Skills", value: skills, setValue: setSkills },
+                  {
+                    label: "Gender",
+                    value: formData.gender,
+                    name: "gender",
+                  },
+                  { label: "Bio", value: formData.bio, name: "bio" },
+                  { label: "Age", value: formData.age, name: "age" },
+                  { label: "Photo", value: formData.photo, name: "photo" },
+                  {
+                    label: "Skills",
+                    value: formData.skills,
+                    name: "skills",
+                  },
                 ].map((field, idx) => (
                   <div className="form-control" key={idx}>
                     <label className="label">
@@ -234,7 +243,10 @@ const EditPage = ({ user }) => {
                       className="input input-bordered"
                       value={field.value}
                       onChange={(e) =>
-                        field.setValue(truncateText(e.target.value))
+                        setFormData({
+                          ...formData,
+                          [field.name]: truncateText(e.target.value),
+                        })
                       }
                     />
                   </div>
@@ -317,7 +329,7 @@ const EditPage = ({ user }) => {
         {/* Right: User Card Container */}
         <div className="w-full h-[792px] max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center px-6 py-4">
           <UserCard
-            user={{ firstName, photo, lastName, age, gender, bio }}
+            formData={formData}
             isPhotoUpload={isPhotoUpload}
             images={images}
             setImages={setImages}

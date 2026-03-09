@@ -1,14 +1,11 @@
 import axios from "axios";
-import React from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/feedSlice";
 import { useNavigate } from "react-router";
+import PropTypes from "prop-types";
 
-const UserCard = (prop) => {
-  const { _id, firstName, photo, lastName, age, gender, bio } = prop.user;
-  const isPhotoUpload = prop.isPhotoUpload;
-  const images = prop.images;
+const UserCard = ({ formData, isPhotoUpload = false, images }) => {
   console.log("IMGAES ", images);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,30 +46,30 @@ const UserCard = (prop) => {
         >
           <figure className="p-4">
             <img
-              src={photo || "/default-avatar.png"}
+              src={formData?.photo || "/default-avatar.png"}
               alt="photo"
               className="rounded-lg object-cover w-full h-64"
             />
           </figure>
           <div className="card-body flex flex-col items-center text-center">
             <h2 className="card-title text-lg md:text-xl">
-              {`${firstName || "Firstname"} ${lastName || "LastName"}`}
+              {`${formData?.firstName || "Firstname"} ${formData?.lastName || "LastName"}`}
             </h2>
             <div className="flex flex-wrap gap-4 justify-center text-sm md:text-base mt-2">
-              {age && <span>Age: {age}</span>}
-              {gender && <span>Gender: {gender}</span>}
+              {formData?.age && <span>Age: {formData?.age}</span>}
+              {formData?.gender && <span>Gender: {formData?.gender}</span>}
             </div>
-            <p className="mt-2">{bio || "bio"}</p>
+            <p className="mt-2">{formData?.bio || "bio"}</p>
             <div className="card-actions justify-center mt-4 flex-wrap gap-2">
               <button
                 className="btn btn-primary"
-                onClick={() => buttonHandler("ignored", _id)}
+                onClick={() => buttonHandler("ignored", formData?._id)}
               >
                 Ignored
               </button>
               <button
                 className="btn btn-secondary"
-                onClick={() => buttonHandler("interested", _id)}
+                onClick={() => buttonHandler("interested", formData?._id)}
               >
                 Interested
               </button>
@@ -107,4 +104,9 @@ const UserCard = (prop) => {
   );
 };
 
+UserCard.propTypes = {
+  formData: PropTypes.object,
+  isPhotoUpload: PropTypes.bool,
+  images: PropTypes.array,
+};
 export default UserCard;

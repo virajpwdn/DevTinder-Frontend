@@ -116,10 +116,15 @@ const EditPage = ({ user }) => {
             file: file.file,
             fileName: file.file.name,
             onProgress: (event) => {
-              setFileUploadProgress((prev) => ({
-                ...prev,
-                [file.name]: Math.round((event.loaded / event.total) * 100),
-              }));
+              const percent = Math.round((event.loaded / event.total) * 100);
+
+              setImages((prev) =>
+                prev.map((img) =>
+                  img.file.name === file.file.name
+                    ? { ...img, progress: percent }
+                    : img,
+                ),
+              );
             },
             abortSignal: abortControllerRef.current.signal,
           });
@@ -168,6 +173,9 @@ const EditPage = ({ user }) => {
           prev.filter((img) => !failedFileNames.has(img.name)),
         );
       }
+
+      //api call which will save this img metadata
+      
 
       console.log("selected file url", imageFiles);
     } catch (error) {

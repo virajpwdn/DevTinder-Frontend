@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/feedSlice";
 import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
+import { RiDeleteBin6Line } from "@remixicon/react";
 
 const UserCard = ({ formData, isPhotoUpload = false, images }) => {
   console.log("IMGAES ", images);
@@ -89,12 +90,17 @@ const UserCard = ({ formData, isPhotoUpload = false, images }) => {
             {images?.map((item, idx) => {
               console.log("first", item);
               return (
-                <img
-                  key={idx}
-                  src={item.preview}
-                  alt="house"
-                  className="h-32 w-32 rounded-md object-cover"
-                />
+                <div key={idx} className="relative">
+                  <img
+                    src={item.preview}
+                    alt="house"
+                    className={`${images.status === "uploading" ? "h-32 w-32 rounded-md object-cover opacity-50" : "h-32 w-32 rounded-md object-cover"} `}
+                  />
+                  <p>Progress: {item.progress}</p>
+                  <button className="absolute top-0 rounded-full h-5 w-5 flex items-center justify-center right-0 text-white bg-red-500 text-center">
+                    <RiDeleteBin6Line size={12} />
+                  </button>
+                </div>
               );
             })}
           </div>

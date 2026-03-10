@@ -21,13 +21,15 @@ const imgHeicToJpegConvert = async (selectedFiles) => {
       }
 
       return file;
-    })
+    }),
   );
 
   const newImages = processedFiles.map((file) => ({
     id: crypto.randomUUID(),
     file,
     preview: URL.createObjectURL(file),
+    progress: 0,
+    status: "uploading",
   }));
 
   return newImages;

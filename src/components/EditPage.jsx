@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { addUser } from "../store/userSlice";
@@ -17,6 +17,7 @@ import {
   upload,
 } from "@imagekit/react";
 import AuthService from "../service/auth.service";
+import UserService from "../service/user.service";
 
 const EditPage = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -35,7 +36,6 @@ const EditPage = ({ user }) => {
   const [isPhotoUpload, setIsPhotoUpload] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [images, setImages] = useState([]);
-  const [fileUploadProgress, setFileUploadProgress] = useState({});
   const [imgMetadata, setImgMetadata] = useState([]);
 
   const fileInputRef = useRef();
@@ -69,7 +69,6 @@ const EditPage = ({ user }) => {
       setTimeout(() => {
         setShowToast(false);
       }, 3000);
-      console.log(respnose);
       navigate("/feed");
     } catch (error) {
       console.error(
@@ -95,7 +94,6 @@ const EditPage = ({ user }) => {
   };
 
   const handleFiles = async (selectedFile) => {
-    console.log("selected file ", selectedFile);
     if (!selectedFile) return;
     if (selectedFile.length + images.length > 6)
       return alert("You can only upload upto 6 images");
@@ -106,7 +104,6 @@ const EditPage = ({ user }) => {
     abortControllerRef.current = new AbortController();
 
     try {
-      console.log("IMAGES - ", imageFiles);
       const uploadImagesPromise = imageFiles.map(async (file) => {
         const authParams = await AuthService.getImageKitToken();
 
@@ -119,11 +116,11 @@ const EditPage = ({ user }) => {
               const percent = Math.round((event.loaded / event.total) * 100);
 
               setImages((prev) =>
-                prev.map((img) =>
-                  img.file.name === file.file.name
+                prev.map((img) => {
+                  return img?.clientRefId === file?.file?.clientRefId
                     ? { ...img, progress: percent }
-                    : img,
-                ),
+                    : img;
+                }),
               );
             },
             abortSignal: abortControllerRef.current.signal,
@@ -132,6 +129,7 @@ const EditPage = ({ user }) => {
           return {
             status: "fulfilled",
             fileName: file.file.name,
+            clientRefId: file.file.clientRefId,
             value: result,
           };
         } catch (error) {
@@ -148,23 +146,39 @@ const EditPage = ({ user }) => {
       const succeed = results.filter((r) => r.status === "fulfilled");
       const failed = results.filter((r) => r.status === "rejected");
 
-      // Preparing Payload for POST api
-      setImgMetadata((prev) => [
-        ...prev,
-        ...succeed.map((img) => ({
-          filePath: img.value.filePath,
-          fileId: img.value.fileId,
-          fileType: img.value.fileType,
-          height: img.value.height,
-          width: img.value.width,
-          url: img.value.url,
-          size: img.value.size,
-        })),
-      ]);
+      setImages((prev) =>
+        prev.map((img) => {
+          console.log("IMG - ", img);
+          console.log("PREVIOUS - ", prev);
+          console.log("suc - ", succeed);
+          const match = succeed.find(
+            (r) => r.clientRefId === img.clientRefId,
+          );
+          if (match) {
+            return {
+              ...img,
+              status: "complete",
+              imagekitResponse: match.value,
+            };
+          }
+          return img;
+        }),
+      );
+
+      const newMetadata = succeed.map((img) => ({
+        filePath: img.value.filePath,
+        fileId: img.value.fileId,
+        fileType: img.value.fileType,
+        height: img.value.height,
+        width: img.value.width,
+        url: img.value.url,
+        size: img.value.size,
+        clientRefId: img.clientRefId,
+      }));
+
 
       if (failed.length > 0) {
         const failedFileNames = new Set(failed.map((r) => r.fileName));
-        console.log("file names - ", failedFileNames);
         alert(
           `${failed.length} image(s) failed to upload, ${failed[0].reason}`,
         );
@@ -174,10 +188,9 @@ const EditPage = ({ user }) => {
         );
       }
 
-      //api call which will save this img metadata
-      
-
-      console.log("selected file url", imageFiles);
+      if (succeed.length > 0) {
+        await UserService.postUserPhotos(newMetadata);
+      }
     } catch (error) {
       if (error instanceof ImageKitAbortError) {
         console.error("Upload aborted:", error.reason);
@@ -193,6 +206,26 @@ const EditPage = ({ user }) => {
       return;
     }
   };
+
+  const imgDeleteHandler = async (photoId) => {
+    const deleteImg = await UserService.deletePhotoById(photoId);
+    setImages(deleteImg.photos);
+  };
+
+  useEffect(() => {
+    const getAllPhotos = async () => {
+      try {
+        const { data } = await UserService.getAllPhotos();
+        if (data.photos.length > 0) {
+          setImages(data.photos);
+        }
+      } catch (error) {
+        console.log("error - ", error);
+      }
+    };
+
+    getAllPhotos();
+  }, []);
 
   return (
     <>
@@ -341,6 +374,7 @@ const EditPage = ({ user }) => {
             isPhotoUpload={isPhotoUpload}
             images={images}
             setImages={setImages}
+            imgDeleteHandler={imgDeleteHandler}
           />
         </div>
 

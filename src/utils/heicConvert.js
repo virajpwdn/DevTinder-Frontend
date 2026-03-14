@@ -24,14 +24,19 @@ const imgHeicToJpegConvert = async (selectedFiles) => {
     }),
   );
 
-  const newImages = processedFiles.map((file) => ({
-    id: crypto.randomUUID(),
-    file,
-    preview: URL.createObjectURL(file),
-    progress: 0,
-    status: "uploading",
-  }));
+  const newImages = processedFiles.map((file) => {
+    const clientRefId = crypto.randomUUID();
 
+    const taggedFile = Object.assign(file, { clientRefId });
+
+    return {
+      clientRefId, 
+      file: taggedFile,
+      preview: URL.createObjectURL(file),
+      progress: 0,
+      status: "uploading",
+    };
+  });
   return newImages;
 };
 

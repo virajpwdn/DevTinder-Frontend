@@ -6,7 +6,12 @@ import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import { RiDeleteBin6Line } from "@remixicon/react";
 
-const UserCard = ({ formData, isPhotoUpload = false, images }) => {
+const UserCard = ({
+  formData,
+  isPhotoUpload = false,
+  images,
+  imgDeleteHandler,
+}) => {
   console.log("IMGAES ", images);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,18 +93,28 @@ const UserCard = ({ formData, isPhotoUpload = false, images }) => {
         >
           <div className="h-32 w-full rounded-md grid col-span-2 grid-cols-2 justify-items-center gap-3">
             {images?.map((item, idx) => {
-              console.log("first", item);
               return (
                 <div key={idx} className="relative">
                   <img
-                    src={item.preview}
+                    src={item.preview ? item.preview : item.url}
                     alt="house"
-                    className={`${images.status === "uploading" ? "h-32 w-32 rounded-md object-cover opacity-50" : "h-32 w-32 rounded-md object-cover"} `}
+                    className={`${item.status === "uploading" ? "h-32 w-32 rounded-md object-cover opacity-50" : "h-32 w-32 rounded-md object-cover"} `}
                   />
                   <p>Progress: {item.progress}</p>
-                  <button className="absolute top-0 rounded-full h-5 w-5 flex items-center justify-center right-0 text-white bg-red-500 text-center">
-                    <RiDeleteBin6Line size={12} />
-                  </button>
+                  {(item.imagekitResponse || item.fileId) && (
+                    <button className="absolute top-0 rounded-full h-5 w-5 flex items-center justify-center right-0     text-white bg-red-500 text-center">
+                      <RiDeleteBin6Line
+                        onClick={() => {
+                          imgDeleteHandler(
+                            item.imagekitResponse
+                              ? item.imagekitResponse.fileId
+                              : item.fileId,
+                          );
+                        }}
+                        size={12}
+                      />
+                    </button>
+                  )}
                 </div>
               );
             })}
@@ -114,5 +129,6 @@ UserCard.propTypes = {
   formData: PropTypes.object,
   isPhotoUpload: PropTypes.bool,
   images: PropTypes.array,
+  imgDeleteHandler: PropTypes.func,
 };
 export default UserCard;

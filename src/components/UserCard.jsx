@@ -11,6 +11,7 @@ const UserCard = ({
   isPhotoUpload = false,
   images,
   imgDeleteHandler,
+  onClickHandler,
 }) => {
   console.log("IMGAES ", images);
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const UserCard = ({
         <div
           className="card bg-base-300 w-full shadow-xl absolute inset-0"
           style={{ backfaceVisibility: "hidden" }}
+          onClick={onClickHandler}
         >
           <figure className="p-4">
             <img
@@ -69,13 +71,19 @@ const UserCard = ({
             <div className="card-actions justify-center mt-4 flex-wrap gap-2">
               <button
                 className="btn btn-primary"
-                onClick={() => buttonHandler("ignored", formData?._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  buttonHandler("ignored", formData?._id);
+                }}
               >
                 Ignored
               </button>
               <button
                 className="btn btn-secondary"
-                onClick={() => buttonHandler("interested", formData?._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  buttonHandler("interested", formData?._id);
+                }}
               >
                 Interested
               </button>
@@ -130,5 +138,6 @@ UserCard.propTypes = {
   isPhotoUpload: PropTypes.bool,
   images: PropTypes.array,
   imgDeleteHandler: PropTypes.func,
+  onClickHandler: PropTypes.func,
 };
 export default UserCard;

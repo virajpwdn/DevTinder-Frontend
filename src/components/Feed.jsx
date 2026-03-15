@@ -6,12 +6,15 @@ import { addUser, removeUser } from "../store/feedSlice";
 import store from "../store/appStore";
 import UserCard from "./UserCard";
 import Shimmer from "./Shimmer";
+import { useNavigate } from "react-router";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   const getFeed = async () => {
     try {
@@ -46,18 +49,25 @@ const Feed = () => {
   }
 
   const formData = {
-    firstName: feed[0]?.firstName,
-    lastName: feed[0]?.lastName,
-    gender: feed[0]?.gender,
-    age: feed[0].age,
-    bio: feed[0]?.bio,
-    skills: feed[0]?.skills,
-    photo: feed[0]?.photo,
+    firstName: feed[0]?.firstName ?? "",
+    lastName: feed[0]?.lastName ?? "",
+    gender: feed[0]?.gender ?? "",
+    age: feed[0].age ?? "",
+    bio: feed[0]?.bio ?? "",
+    skills: feed[0]?.skills ?? "",
+    photo: feed[0]?.photo ?? "",
+    _id: feed[0]?._id,
   };
 
   return (
     feed && (
-      <div className="min-h-screen flex items-center justify-center">
+      <div
+        className="min-h-screen flex items-center justify-center cursor-pointer"
+        onClick={() => {
+          const params = new URLSearchParams(formData);
+          navigate(`/guest?${params.toString()}`);
+        }}
+      >
         <UserCard formData={formData} />
       </div>
     )

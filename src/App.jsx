@@ -15,6 +15,7 @@ import Premium from "./components/shop/Premium";
 // New Chat imports
 import Chat from "./components/chat/Chat";
 import Hero from "./components/Hero";
+import GuestProfile from "./components/GuestProfile";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
               <Route path="/profile/view" element={<Profile />} />
               <Route path="/connections" element={<Connection />} />
               <Route path="/requests" element={<Requests />} />
+              <Route path="/guest" element={<GuestProfile />} />
               {/* New Shop Premium Routes - testing phase */}
               <Route path="/premium" element={<Premium />} />
 

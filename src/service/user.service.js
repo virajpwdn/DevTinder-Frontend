@@ -34,6 +34,19 @@ class UserService {
       throw new Error("Error while deleting photo", error);
     }
   }
+
+  async followUnfollowHandler(status, userId) {
+    try {
+      const response = await apiClient.post(
+        `/request/send/${status}/${userId}`,
+        {},
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new Error("error while sending request", error);
+    }
+  }
 }
 
 export default new UserService();

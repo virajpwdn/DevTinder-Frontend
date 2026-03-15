@@ -7,10 +7,16 @@ import {
 } from "@remixicon/react";
 import { useEffect, useState } from "react";
 import userService from "../service/user.service";
+import { removeUser } from "../store/feedSlice";
+import UserService from "../service/user.service";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 
 const GuestProfile = () => {
   const [searchParams] = useSearchParams();
   const [photos, setPhotos] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const formData = {
     _id: searchParams.get("_id"),
@@ -27,6 +33,17 @@ const GuestProfile = () => {
     photo: searchParams.get("photo"),
   };
 
+  const buttonHandler = async (status, userId) => {
+    try {
+      await UserService.followUnfollowHandler(status, userId);
+      dispatch(removeUser(userId));
+      navigate("/feed");
+    } catch (error) {
+      console.error("error ", error);
+    }
+  };
+
+  // To fetch users all photos
   useEffect(() => {
     const getImages = async () => {
       try {
@@ -40,7 +57,6 @@ const GuestProfile = () => {
     getImages();
   }, []);
 
-  console.log("formdata - ", formData);
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center max-md:px-5">
       <div className="w-[740px] mx-auto rounded-lg bg-black/25 flex gap-4 p-3 py-10 flex-col md:flex-row">
@@ -86,13 +102,13 @@ const GuestProfile = () => {
             <div className="flex gap-2 w-full mt-5 -ml-3">
               <button
                 className="flex-1 btn btn-primary"
-                // onClick={() => buttonHandler("ignored", formData?._id)}
+                onClick={() => buttonHandler("ignored", formData?._id)}
               >
                 Ignored
               </button>
               <button
                 className="flex-1 btn btn-secondary"
-                // onClick={() => buttonHandler("interested", formData?._id)}
+                onClick={() => buttonHandler("interested", formData?._id)}
               >
                 Interested
               </button>

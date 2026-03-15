@@ -12,9 +12,14 @@ class UserService {
     }
   }
 
-  async getAllPhotos() {
+  async getAllPhotos(userId) {
     try {
-      const response = await apiClient.get("/user/get/img");
+      let response;
+      if (userId) {
+        response = await apiClient.get(`/user/get/img?userId=${userId}`);
+      } else {
+        response = await apiClient.get("/user/get/img");
+      }
       return response.data;
     } catch (error) {
       throw new Error("Image fetch error", error);

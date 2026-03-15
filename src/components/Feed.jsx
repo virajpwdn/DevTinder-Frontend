@@ -1,9 +1,8 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, removeUser } from "../store/feedSlice";
-import store from "../store/appStore";
+import { addUser } from "../store/feedSlice";
 import UserCard from "./UserCard";
 import Shimmer from "./Shimmer";
 import { useNavigate } from "react-router";
@@ -11,10 +10,9 @@ import { useNavigate } from "react-router";
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const getFeed = async () => {
     try {
@@ -58,17 +56,17 @@ const Feed = () => {
     photo: feed[0]?.photo ?? "",
     _id: feed[0]?._id,
   };
-
+  const onClickHandler = () => {
+    const params = new URLSearchParams(formData);
+    navigate(`/guest?${params.toString()}`);
+  };
   return (
     feed && (
       <div
         className="min-h-screen flex items-center justify-center cursor-pointer"
-        onClick={() => {
-          const params = new URLSearchParams(formData);
-          navigate(`/guest?${params.toString()}`);
-        }}
+        onClick={() => {}}
       >
-        <UserCard formData={formData} />
+        <UserCard formData={formData} onClickHandler={onClickHandler} />
       </div>
     )
   );

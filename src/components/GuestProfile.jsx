@@ -30,7 +30,7 @@ const GuestProfile = () => {
   useEffect(() => {
     const getImages = async () => {
       try {
-        const photos = await userService.getAllPhotos();
+        const photos = await userService.getAllPhotos(formData._id);
         console.log("Photos", photos);
         setPhotos(photos.data.photos);
       } catch (error) {
@@ -43,8 +43,8 @@ const GuestProfile = () => {
   console.log("formdata - ", formData);
   return (
     <div className="h-screen overflow-hidden flex items-center justify-center max-md:px-5">
-      <div className="w-[740px] mx-auto rounded-lg bg-black/25 h-[480px] flex gap-4 p-3">
-        <div className="flex-1 pl-5 pt-5 relative">
+      <div className="w-[740px] mx-auto rounded-lg bg-black/25 flex gap-4 p-3 py-10 flex-col md:flex-row">
+        <div className="flex-1 pl-5 relative">
           <div id="cover-photo" className="rounded-md -ml-3 z-0 relative">
             <img
               className="rounded-lg h-40 w-full object-cover"
@@ -58,20 +58,20 @@ const GuestProfile = () => {
               <RiTwitterLine />
             </div>
           </div>
-          <div className="absolute top-32 w-full ">
+          <div className="-mt-14 w-full relative z-50">
             <div id="img-container" className="h-24 w-24 rounded-lg z-10">
               <img
-                src="https://images.unsplash.com/photo-1772340751788-4515ebbd55df?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src={formData.photo}
                 alt=""
-                className="size-full rounded-md"
+                className="size-full rounded-md object-cover"
               />
             </div>
-            <h3 className="text-2xl font-semibold">
+            <h3 className="text-2xl font-semibold mt-2">
               {formData.firstName + " " + formData.lastName}
             </h3>
             <p className="text-sm font-light">{formData.bio}</p>
-            <p className="py-2 space-x-3 mt-5">
-              Skills:{" "}
+            <p className="mt-5 font-bold">Skills </p>
+            <p className="py-2 flex flex-wrap gap-3">
               {formData.skills.map((skill, idx) => (
                 <span className="border border-dotted p-1 rounded-md" key={idx}>
                   {skill}
@@ -99,7 +99,7 @@ const GuestProfile = () => {
             </div>
           </div>
         </div>
-        <div className="flex-1 border-l border-gray-700">
+        <div className="flex-1 border-t mt-5 pt-5 md:mt-0 md:pt-0 md:border-l md:border-t-0 border-gray-700">
           {photos.length === 0 ? (
             <p className="flex items-center justify-center h-full">
               No images found!

@@ -1,8 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { removeUser } from "../store/feedSlice";
-import { useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import { RiDeleteBin6Line } from "@remixicon/react";
 
@@ -13,20 +12,17 @@ const UserCard = ({
   imgDeleteHandler,
   onClickHandler,
 }) => {
-  console.log("IMGAES ", images);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const buttonHandler = async (status, userId) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
         {},
         { withCredentials: true },
       );
 
       dispatch(removeUser(userId));
-      console.log(response.data);
     } catch (error) {
       // TODO: store error into state
       console.log(error);

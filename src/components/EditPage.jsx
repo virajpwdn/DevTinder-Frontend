@@ -7,7 +7,13 @@ import { BASE_URL } from "../utils/constants";
 import UserCard from "../components/UserCard";
 import { truncateText } from "../utils/truncateText";
 import PropTypes from "prop-types";
-import { RiUpload2Fill } from "@remixicon/react";
+import {
+  RiGithubLine,
+  RiGlobalLine,
+  RiInstagramLine,
+  RiTwitterLine,
+  RiUpload2Fill,
+} from "@remixicon/react";
 import imgHeicToJpegConvert from "../utils/heicConvert";
 import {
   ImageKitAbortError,
@@ -37,6 +43,7 @@ const EditPage = ({ user }) => {
   const [dragOver, setDragOver] = useState(false);
   const [images, setImages] = useState([]);
   const [imgMetadata, setImgMetadata] = useState([]);
+  const [showSocial, setShowSocial] = useState(false);
 
   const fileInputRef = useRef();
   const abortControllerRef = useRef(null);
@@ -151,9 +158,7 @@ const EditPage = ({ user }) => {
           console.log("IMG - ", img);
           console.log("PREVIOUS - ", prev);
           console.log("suc - ", succeed);
-          const match = succeed.find(
-            (r) => r.clientRefId === img.clientRefId,
-          );
+          const match = succeed.find((r) => r.clientRefId === img.clientRefId);
           if (match) {
             return {
               ...img,
@@ -175,7 +180,6 @@ const EditPage = ({ user }) => {
         size: img.value.size,
         clientRefId: img.clientRefId,
       }));
-
 
       if (failed.length > 0) {
         const failedFileNames = new Set(failed.map((r) => r.fileName));
@@ -241,11 +245,20 @@ const EditPage = ({ user }) => {
             minHeight: "600px",
           }}
         >
+          {/* Front side card */}
           <div
             className="bg-base-200 rounded-lg flex items-center justify-center"
-            style={{ backfaceVisibility: "hidden" }}
+            style={{ backfaceVisibility: "hidden", overflow: "hidden" }}
           >
-            <div className="w-full px-6 py-4 overflow-y-auto">
+            <div
+              className="w-full px-6 py-4"
+              style={{
+                transition:
+                  "transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease",
+                transform: showSocial ? "translateY(-100%)" : "translateY(0%)",
+                opacity: showSocial ? 0 : 1,
+              }}
+            >
               <form className="card-body" onSubmit={submitHandler}>
                 {[
                   {
@@ -293,10 +306,11 @@ const EditPage = ({ user }) => {
                   </div>
                 ))}
                 <p className="text-red-500 text-xs">{error}</p>
-                <div className="form-control mt-6 flex gap-3 flex-row">
-                  <button className="btn btn-primary flex-1">
-                    Update Profile
-                  </button>
+                <div className="form-control mt-6">
+                  <button className="btn btn-primary">Update Profile</button>
+                </div>
+                {/* CTA Buttons */}
+                <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => {
@@ -306,11 +320,95 @@ const EditPage = ({ user }) => {
                   >
                     Upload Photos
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowSocial(true)}
+                    className="btn btn-outline flex-1"
+                  >
+                    Add Social Links
+                  </button>
+                </div>
+              </form>
+            </div>
+            {/* social div */}
+            <div
+              className="bg-base-200 rounded-lg w-full absolute inset-0 p-10"
+              style={{
+                transition:
+                  "transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease",
+                transform: showSocial ? "translateY(0%)" : "translateY(100%)",
+                opacity: showSocial ? 1 : 0,
+                pointerEvents: showSocial ? "auto" : "none",
+              }}
+            >
+              <div className="flex gap-3 items-center">
+                {/* your upload UI goes here */}
+                <button
+                  type="button"
+                  onClick={() => setShowSocial(false)}
+                  className="btn rounded-full btn-outline btn-sm"
+                >
+                  ←
+                </button>
+                <h2 className="text-lg font-bold">Add Social Links</h2>
+              </div>
+
+              {/* Form For social fields */}
+              <form className="card-body mt-12">
+                {[
+                  {
+                    label: "GtiHub",
+                    value: formData.firstName,
+                    name: "gitHub",
+                    icon: RiGithubLine,
+                  },
+                  {
+                    label: "Twitter",
+                    value: formData.lastName,
+                    name: "twitter",
+                    icon: RiTwitterLine,
+                  },
+                  {
+                    label: "Instagram",
+                    value: formData.gender,
+                    name: "instagram",
+                    icon: RiInstagramLine,
+                  },
+                  {
+                    label: "Website",
+                    value: formData.bio,
+                    name: "website",
+                    icon: RiGlobalLine,
+                  },
+                ].map((field, idx) => (
+                  <div className="form-control" key={idx}>
+                    <label className="label">
+                      <span className="label-text text-xs uppercase">
+                        {field.label}
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={field.label}
+                      className="input input-bordered"
+                      value={field.value}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [field.name]: truncateText(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                ))}
+                <p className="text-red-500 text-xs">{error}</p>
+                <div className="form-control mt-6">
+                  <button className="btn btn-primary">Update Social Links</button>
                 </div>
               </form>
             </div>
           </div>
-
+          {/* Back side card */}
           <div
             className="bg-base-200 rounded-lg w-full absolute inset-0 p-14"
             style={{
@@ -368,7 +466,7 @@ const EditPage = ({ user }) => {
         </div>
 
         {/* Right: User Card Container */}
-        <div className="w-full h-[792px] max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center px-6 py-4">
+        <div className="w-full h-[850px] max-w-[500px] bg-base-200 rounded-lg flex items-center justify-center px-6 py-4">
           <UserCard
             formData={formData}
             isPhotoUpload={isPhotoUpload}

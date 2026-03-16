@@ -1,4 +1,4 @@
-import EditPage from "./EditPage";
+import EditPage from "../components/edit/EditPage";
 import { useSelector } from "react-redux";
 
 const Profile = () => {

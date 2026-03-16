@@ -47,6 +47,8 @@ class UserService {
       throw new Error("error while sending request", error);
     }
   }
+  
+  // async profileEdit(formData, )
 }
 
 export default new UserService();

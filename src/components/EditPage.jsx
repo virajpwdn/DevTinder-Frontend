@@ -11,6 +11,7 @@ import {
   RiGithubLine,
   RiGlobalLine,
   RiInstagramLine,
+  RiLinkedinBoxLine,
   RiTwitterLine,
   RiUpload2Fill,
 } from "@remixicon/react";
@@ -34,6 +35,7 @@ const EditPage = ({ user }) => {
     bio: user?.bio || "",
     skills: user?.skills || [],
     photo: user?.photo || "",
+    socialLinks: user?.socialLinks || {},
   });
 
   const [error, setError] = useState("");
@@ -65,6 +67,7 @@ const EditPage = ({ user }) => {
           age: ageAsNumber,
           photo: formData.photo,
           skills: formData.skills,
+          socialLinks: formData.socialLinks,
         },
         { withCredentials: true },
       );
@@ -354,29 +357,35 @@ const EditPage = ({ user }) => {
               </div>
 
               {/* Form For social fields */}
-              <form className="card-body mt-12">
+              <form className="card-body mt-12" onSubmit={submitHandler}>
                 {[
                   {
-                    label: "GtiHub",
-                    value: formData.firstName,
+                    label: "GitHub",
+                    value: formData.socialLinks.gitHub,
                     name: "gitHub",
                     icon: RiGithubLine,
                   },
                   {
+                    label: "LinkedIn",
+                    value: formData.socialLinks.linkedIn,
+                    name: "linkedIn",
+                    icon: RiLinkedinBoxLine,
+                  },
+                  {
                     label: "Twitter",
-                    value: formData.lastName,
+                    value: formData.socialLinks.twitter,
                     name: "twitter",
                     icon: RiTwitterLine,
                   },
                   {
                     label: "Instagram",
-                    value: formData.gender,
+                    value: formData.socialLinks.instagram,
                     name: "instagram",
                     icon: RiInstagramLine,
                   },
                   {
                     label: "Website",
-                    value: formData.bio,
+                    value: formData.socialLinks.website,
                     name: "website",
                     icon: RiGlobalLine,
                   },
@@ -395,7 +404,10 @@ const EditPage = ({ user }) => {
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          [field.name]: truncateText(e.target.value),
+                          socialLinks: {
+                            ...formData.socialLinks,
+                            [field.name]: truncateText(e.target.value),
+                          },
                         })
                       }
                     />
@@ -403,7 +415,9 @@ const EditPage = ({ user }) => {
                 ))}
                 <p className="text-red-500 text-xs">{error}</p>
                 <div className="form-control mt-6">
-                  <button className="btn btn-primary">Update Social Links</button>
+                  <button className="btn btn-primary">
+                    Update Social Links
+                  </button>
                 </div>
               </form>
             </div>

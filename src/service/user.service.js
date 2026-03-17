@@ -47,8 +47,15 @@ class UserService {
       throw new Error("error while sending request", error);
     }
   }
-  
-  // async profileEdit(formData, )
+
+  async profileEdit(formData) {
+    try {
+      const response = await apiClient.patch("/profile/edit", { formData });
+      return response.data;
+    } catch (error) {
+      throw new Error("error while updating profile", error);
+    }
+  }
 }
 
 export default new UserService();

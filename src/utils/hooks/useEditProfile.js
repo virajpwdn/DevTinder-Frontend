@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { addUser } from "../../store/userSlice";
 import { BASE_URL } from "../constants";
 import { truncateText } from "../truncateText";
+import UserService from "../../service/user.service";
 
 export const useEditProfile = (user) => {
   const [formData, setFormData] = useState({
@@ -42,13 +43,13 @@ export const useEditProfile = (user) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      // const ageAsNumber =
-      const res = await axios.patch(
-        BASE_URL + "/profile/edit",
-        { ...formData, age: formData.age ? parseInt(formData.age, 10) : null },
-        { withCredentials: true },
-      );
-      dispatch(addUser(res.data?.data));
+      const ageAsNumber = parseInt(formData.age, 10);
+      setFormData((prev) => ({
+        ...prev,
+        age: prev.age ? ageAsNumber : null,
+      }));
+      const res = await UserService.profileEdit(formData);
+      dispatch(addUser(res?.data));
       setError("");
       setResponse(res.data.message);
       setShowToast(true);
@@ -59,5 +60,13 @@ export const useEditProfile = (user) => {
     }
   };
 
-  return { formData, error, response, showToast, handleChange, submitHandler, handleSocialLinksChange };
+  return {
+    formData,
+    error,
+    response,
+    showToast,
+    handleChange,
+    submitHandler,
+    handleSocialLinksChange,
+  };
 };

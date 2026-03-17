@@ -16,7 +16,6 @@ const SocialLinksPanel = ({
   onChange,
   error,
 }) => {
-  console.log("formData - ", formData);
   return (
     <div
       className="bg-base-200 rounded-lg w-full absolute inset-0 p-10"
@@ -51,7 +50,7 @@ const SocialLinksPanel = ({
               type="text"
               placeholder={field.label}
               className="input input-bordered"
-              value={(formData && formData[field.name]) || ""}
+              value={formData.socialLinks[field.name]}
               onChange={(e) => onChange(field.name, e.target.value)}
             />
           </div>

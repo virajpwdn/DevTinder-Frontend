@@ -29,10 +29,20 @@ export const useEditProfile = (user) => {
     setFormData((prev) => ({ ...prev, [name]: truncateText(value) }));
   };
 
+  const handleSocialLinksChange = (name, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      socialLinks: {
+        ...prev.socialLinks,
+        [name]: truncateText(value),
+      },
+    }));
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      // const ageAsNumber = 
+      // const ageAsNumber =
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
         { ...formData, age: formData.age ? parseInt(formData.age, 10) : null },
@@ -49,5 +59,5 @@ export const useEditProfile = (user) => {
     }
   };
 
-  return { formData, error, response, showToast, handleChange, submitHandler };
+  return { formData, error, response, showToast, handleChange, submitHandler, handleSocialLinksChange };
 };

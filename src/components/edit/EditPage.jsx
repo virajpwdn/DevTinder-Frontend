@@ -11,8 +11,15 @@ const EditPage = ({ user }) => {
   const [isPhotoUpload, setIsPhotoUpload] = useState(false);
   const [showSocial, setShowSocial] = useState(false);
 
-  const { formData, error, response, showToast, handleChange, submitHandler } =
-    useEditProfile(user);
+  const {
+    formData,
+    error,
+    response,
+    showToast,
+    handleChange,
+    submitHandler,
+    handleSocialLinksChange,
+  } = useEditProfile(user);
 
   const {
     images,
@@ -25,7 +32,7 @@ const EditPage = ({ user }) => {
     handleFiles,
     imgDeleteHandler,
   } = usePhotoUpload();
-  console.log("formData2", formData);
+
   return (
     <>
       <div className="min-h-screen flex flex-col items-center lg:flex-row justify-center gap-10 my-10 px-4">
@@ -45,21 +52,22 @@ const EditPage = ({ user }) => {
             className="bg-base-200 rounded-lg flex items-center justify-center"
             style={{ backfaceVisibility: "hidden", overflow: "hidden" }}
           >
-            {formData && (
-              <EditFormPanel
-                formData={formData}
-                error={error}
-                showSocial={showSocial}
-                onChange={handleChange}
-                onSubmit={submitHandler}
-                onPhotoUploadClick={() => setIsPhotoUpload(true)}
-                onSocialClick={() => setShowSocial(true)}
-              />
-            )}
+            <EditFormPanel
+              formData={formData}
+              error={error}
+              showSocial={showSocial}
+              onChange={handleChange}
+              onSubmit={submitHandler}
+              onPhotoUploadClick={() => setIsPhotoUpload(true)}
+              onSocialClick={() => setShowSocial(true)}
+            />
 
             <SocialLinksPanel
               showSocial={showSocial}
               onBack={() => setShowSocial(false)}
+              formData={formData}
+              onChange={handleSocialLinksChange}
+              onSubmit={submitHandler}
             />
           </div>
           {/* Back face */}

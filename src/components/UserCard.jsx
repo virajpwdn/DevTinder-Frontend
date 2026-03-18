@@ -3,7 +3,13 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { removeUser } from "../store/feedSlice";
 import PropTypes from "prop-types";
-import { RiDeleteBin6Line } from "@remixicon/react";
+import {
+  RiDeleteBin6Line,
+  RiGithubLine,
+  RiGlobeLine,
+  RiInstagramLine,
+  RiTwitterLine,
+} from "@remixicon/react";
 
 const UserCard = ({
   formData,
@@ -28,7 +34,7 @@ const UserCard = ({
       console.log(error);
     }
   };
-
+  console.log("FORMDATA -> ", formData)
   return (
     <div className="h-[768px] w-full flex items-center justify-center px-4 py-8">
       {/* Wrapper — this is what rotates */}
@@ -44,45 +50,68 @@ const UserCard = ({
       >
         {/* FRONT FACE */}
         <div
-          className="card bg-base-300 w-full shadow-xl absolute inset-0"
+          className="card w-full absolute inset-0"
           style={{ backfaceVisibility: "hidden" }}
           onClick={onClickHandler}
         >
-          <figure className="p-4">
-            <img
-              src={formData?.photo || "/default-avatar.png"}
-              alt="photo"
-              className="rounded-lg object-cover w-full h-64"
-            />
-          </figure>
-          <div className="card-body flex flex-col items-center text-center">
-            <h2 className="card-title text-lg md:text-xl">
-              {`${formData?.firstName || "Firstname"} ${formData?.lastName || "LastName"}`}
-            </h2>
-            <div className="flex flex-wrap gap-4 justify-center text-sm md:text-base mt-2">
-              {formData?.age && <span>Age: {formData?.age}</span>}
-              {formData?.gender && <span>Gender: {formData?.gender}</span>}
-            </div>
-            <p className="mt-2">{formData?.bio || "bio"}</p>
-            <div className="card-actions justify-center mt-4 flex-wrap gap-2">
-              <button
-                className="btn btn-primary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  buttonHandler("ignored", formData?._id);
-                }}
-              >
-                Ignored
-              </button>
-              <button
-                className="btn btn-secondary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  buttonHandler("interested", formData?._id);
-                }}
-              >
-                Interested
-              </button>
+          <div className="w-[400px] mx-auto rounded-lg bg-black/25 shadow-xl flex gap-4 p-3 py-10 flex-col md:flex-row">
+            <div className="flex-1 pl-5 pr-2 relative">
+              <div id="cover-photo" className="rounded-md -ml-3 z-0 relative">
+                <img
+                  className="rounded-lg h-40 w-full object-cover"
+                  src="/orange-gradient.png"
+                  alt=""
+                />
+                <div className="flex absolute bottom-3 right-3 text-white gap-2">
+                  <RiGithubLine />
+                  <RiGlobeLine />
+                  <RiInstagramLine />
+                  <RiTwitterLine />
+                </div>
+              </div>
+              <div className="-mt-14 w-full relative z-50">
+                <div id="img-container" className="h-24 w-24 rounded-lg z-10">
+                  <img
+                    src={formData.photo}
+                    alt=""
+                    className="size-full rounded-md object-cover"
+                  />
+                </div>
+                <h3 className="text-2xl font-semibold mt-2">
+                  {formData.firstName + " " + formData.lastName}
+                </h3>
+                <p className="text-sm font-light">{formData.bio}</p>
+                <p className="mt-5 font-bold">Skills </p>
+                <p className="py-2 flex flex-wrap gap-3">
+                  {formData?.skills?.map((skill, idx) => (
+                    <span
+                      className="border border-dotted p-1 rounded-md"
+                      key={idx}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </p>
+                <div className="flex gap-4">
+                  <p>Age: {formData.age ? formData.age : "N/A"}</p>
+                  <p>Gender: {formData.gender}</p>
+                </div>
+
+                <div className="flex gap-2 w-full mt-5 -ml-1">
+                  <button
+                    className="flex-1 btn btn-primary"
+                    onClick={() => buttonHandler("ignored", formData?._id)}
+                  >
+                    Ignored
+                  </button>
+                  <button
+                    className="flex-1 btn btn-secondary"
+                    onClick={() => buttonHandler("interested", formData?._id)}
+                  >
+                    Interested
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

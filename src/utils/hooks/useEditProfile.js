@@ -27,7 +27,14 @@ export const useEditProfile = (user) => {
   const dispatch = useDispatch();
 
   const handleChange = (name, value) => {
-    setFormData((prev) => ({ ...prev, [name]: truncateText(value) }));
+    if (name === "skills") {
+      setFormData((prev) => ({
+        ...prev,
+        skills: value.split(",").map((skill) => truncateText(skill, 20)),
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: truncateText(value) }));
+    }
   };
 
   const handleSocialLinksChange = (name, value) => {

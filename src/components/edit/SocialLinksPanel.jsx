@@ -6,6 +6,7 @@ const SOCIAL_FIELDS = [
   { label: "GitHub", name: "gitHub" },
   { label: "Instagram", name: "instagram" },
   { label: "Website", name: "website" },
+  { label: "Cover Photo", name: "coverPhoto" },
 ];
 
 const SocialLinksPanel = ({

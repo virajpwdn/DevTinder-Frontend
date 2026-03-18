@@ -11,10 +11,12 @@ import { removeUser } from "../store/feedSlice";
 import UserService from "../service/user.service";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import Shimmer from "./Shimer";
 
 const GuestProfile = () => {
   const [searchParams] = useSearchParams();
   const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -46,12 +48,15 @@ const GuestProfile = () => {
   // To fetch users all photos
   useEffect(() => {
     const getImages = async () => {
+      setLoading(true);
       try {
         const photos = await userService.getAllPhotos(formData._id);
         console.log("Photos", photos);
         setPhotos(photos.data.photos);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     getImages();
@@ -116,20 +121,31 @@ const GuestProfile = () => {
           </div>
         </div>
         <div className="flex-1 border-t mt-5 pt-5 md:mt-0 md:pt-0 md:border-l md:border-t-0 border-gray-700">
-          {photos.length === 0 ? (
-            <p className="flex items-center justify-center h-full">
-              No images found!
-            </p>
-          ) : (
-            <>
-              <div>
-                {photos.map((img) => {
-                  console.log(img);
-                  // <img src={img.url} alt="" />
-                })}
-              </div>
-            </>
-          )}
+          <>
+            <div className="w-full h-full rounded-md grid col-span-2 grid-cols-2 justify-items-center gap-3">
+              {loading ? (
+                <Shimmer
+                  height="h-32"
+                  width="w-32"
+                  rounded="rounded-md"
+                  count={5}
+                />
+              ) : photos && photos.length > 0 ? (
+                photos.map((img) => (
+                  <img
+                    key={img.clientRefId}
+                    className="h-32 w-32 rounded-md object-cover"
+                    src={img.url}
+                    alt="other users photos"
+                  />
+                ))
+              ) : (
+                <p className="col-span-2 flex items-center justify-center h-full">
+                  No images found!
+                </p>
+              )}
+            </div>
+          </>
         </div>
       </div>
     </div>

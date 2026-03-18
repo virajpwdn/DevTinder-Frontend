@@ -16,6 +16,7 @@ export const useEditProfile = (user) => {
     bio: user?.bio || "",
     skills: user?.skills || [],
     photo: user?.photo || "",
+    coverPhoto: user?.coverPhoto || "",
     socialLinks: user?.socialLinks || {},
   });
 
@@ -38,6 +39,10 @@ export const useEditProfile = (user) => {
   };
 
   const handleSocialLinksChange = (name, value) => {
+    if (name === "coverPhoto") {
+      handleChange(name, value);
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       socialLinks: {

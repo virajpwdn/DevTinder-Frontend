@@ -34,7 +34,7 @@ const UserCard = ({
       console.log(error);
     }
   };
-  console.log("FORMDATA -> ", formData)
+  console.log("FORMDATA -> ", formData);
   return (
     <div className="h-[768px] w-full flex items-center justify-center px-4 py-8">
       {/* Wrapper — this is what rotates */}
@@ -59,8 +59,11 @@ const UserCard = ({
               <div id="cover-photo" className="rounded-md -ml-3 z-0 relative">
                 <img
                   className="rounded-lg h-40 w-full object-cover"
-                  src="/orange-gradient.png"
-                  alt=""
+                  src={
+                    formData.coverPhoto ||
+                    "https://images.unsplash.com/photo-1635776062127-d379bfcba9f8?q=80&w=3264&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  }
+                  alt="cover photo"
                 />
                 <div className="flex absolute bottom-3 right-3 text-white gap-2">
                   <RiGithubLine />
@@ -100,13 +103,19 @@ const UserCard = ({
                 <div className="flex gap-2 w-full mt-5 -ml-1">
                   <button
                     className="flex-1 btn btn-primary"
-                    onClick={() => buttonHandler("ignored", formData?._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      buttonHandler("ignored", formData?._id);
+                    }}
                   >
                     Ignored
                   </button>
                   <button
                     className="flex-1 btn btn-secondary"
-                    onClick={() => buttonHandler("interested", formData?._id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      buttonHandler("interested", formData?._id);
+                    }}
                   >
                     Interested
                   </button>

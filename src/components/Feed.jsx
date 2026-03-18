@@ -33,17 +33,20 @@ const Feed = () => {
   };
 
   useEffect(() => {
-    if (!feed?.length) {
+    if (!feed || feed.length === 0) {
+     
       getFeed();
     }
-  }, []);
+  }, [feed?.length]); 
 
   if (isLoading) return <Shimmer />;
 
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   if (!feed || feed.length === 0) {
-    return <p className="text-center text-gray-500">No more users to show</p>;
+    return (
+      <p className="text-center text-gray-500 mt-20">No more users to show</p>
+    );
   }
 
   const formData = {
@@ -54,6 +57,7 @@ const Feed = () => {
     bio: feed[0]?.bio ?? "",
     skills: feed[0]?.skills ?? "",
     photo: feed[0]?.photo ?? "",
+    coverPhoto: feed[0].coverPhoto ?? "",
     _id: feed[0]?._id,
   };
   const onClickHandler = () => {
@@ -62,10 +66,7 @@ const Feed = () => {
   };
   return (
     feed && (
-      <div
-        className="min-h-screen flex items-center justify-center cursor-pointer"
-        onClick={() => {}}
-      >
+      <div className="min-h-screen flex items-center justify-center cursor-pointer">
         <UserCard formData={formData} onClickHandler={onClickHandler} />
       </div>
     )

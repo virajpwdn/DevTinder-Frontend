@@ -34,10 +34,9 @@ const Feed = () => {
 
   useEffect(() => {
     if (!feed || feed.length === 0) {
-     
       getFeed();
     }
-  }, [feed?.length]); 
+  }, [feed?.length]);
 
   if (isLoading) return <Shimmer />;
 
@@ -58,6 +57,7 @@ const Feed = () => {
     skills: feed[0]?.skills ?? "",
     photo: feed[0]?.photo ?? "",
     coverPhoto: feed[0].coverPhoto ?? "",
+    socialLinks: feed[0].socialLinks ?? {},
     _id: feed[0]?._id,
   };
   const onClickHandler = () => {

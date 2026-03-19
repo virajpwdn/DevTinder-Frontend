@@ -34,7 +34,7 @@ const UserCard = ({
       console.log(error);
     }
   };
-  console.log("FORMDATA -> ", formData);
+
   return (
     <div className="h-[768px] w-full flex items-center justify-center px-4 py-8">
       {/* Wrapper — this is what rotates */}
@@ -66,7 +66,12 @@ const UserCard = ({
                   alt="cover photo"
                 />
                 <div className="flex absolute bottom-3 right-3 text-white gap-2">
-                  <RiGithubLine />
+                  <a
+                    onClick={(e) => e.stopPropagation()}
+                    href={formData?.socialLinks?.gitHub}
+                  >
+                    <RiGithubLine />
+                  </a>
                   <RiGlobeLine />
                   <RiInstagramLine />
                   <RiTwitterLine />

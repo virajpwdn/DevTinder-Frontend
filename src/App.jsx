@@ -16,6 +16,8 @@ import Premium from "./components/shop/Premium";
 import Chat from "./components/chat/Chat";
 import Hero from "./components/Hero";
 import GuestProfile from "./components/GuestProfile";
+import HeroComp from "./components/hero/HeroComp";
+import Index from "./components/hero/Index";
 
 const App = () => {
   return (
@@ -24,6 +26,7 @@ const App = () => {
         <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<Hero />} />
+            <Route path="/index" element={<Index />} />
             <Route path="/" element={<Body />}>
               <Route path="/feed" element={<Feed />} />
               <Route path="/login" element={<Login />} />
@@ -34,6 +37,7 @@ const App = () => {
               <Route path="/guest" element={<GuestProfile />} />
               {/* New Shop Premium Routes - testing phase */}
               <Route path="/premium" element={<Premium />} />
+              <Route path="/hero" element={<HeroComp />} />
 
               {/* New chat Routes - testing phase */}
               <Route path="/chat/:targetId" element={<Chat />} />

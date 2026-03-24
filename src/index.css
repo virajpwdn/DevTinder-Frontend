@@ -1,3 +1,115 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.d-hero h1 {
+  font-size: 7vw;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.d-hero p {
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.d-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#d-section {
+  position: relative;
+  width: 100vw;
+  height: 100svh;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e3e3db;
+  background-color: #141414;
+  overflow: hidden;
+}
+
+.d-hero {
+  flex-direction: column;
+  transition: background-color 0.3s ease;
+}
+
+.d-hero-header {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  will-change: transform, opacity;
+}
+
+.d-hero .d-animated-icons {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  will-change: transform;
+  z-index: 2;
+}
+
+.d-hero .animated-icon {
+  flex: 1;
+  aspect-ratio: 1;
+  will-change: transform;
+}
+
+.d-hero .d-animated-text {
+  position: relative;
+  max-width: 1000px;
+  text-align: center;
+  color: #141414;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+  font-weight: 800;
+}
+
+.text-segment {
+  opacity: 0;
+}
+
+.d-hero .d-placeholder-icon {
+  margin-top: -10px;
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+  vertical-align: middle;
+  will-change: transform;
+  visibility: hidden;
+}
+
+@media (max-width) {
+  .d-hero h1 {
+    font-size: 12vw;
+    text-align: center;
+  }
+
+  .d-hero p {
+    font-size: 1.1rem;
+  }
+
+  .d-hero-header {
+    top: 45%;
+    width: 100%;
+  }
+
+  .d-hero .d-placeholder-icon {
+    margin-top: -4px;
+    width: 30px;
+    height: 30px;
+  }
+}

@@ -87,7 +87,7 @@ export default function HeroSection() {
             </div>
 
             {/* Feature Pills */}
-            <div className="mt-16 flex items-center justify-center gap-4 flex-wrap">
+            {/* <div className="mt-16 flex items-center justify-center gap-4 flex-wrap">
               <div className="flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm backdrop-blur-sm">
                 <svg className="w-4 h-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -121,10 +121,10 @@ export default function HeroSection() {
                 </svg>
                 <span className="text-white">Collaborate on projects</span>
               </div>
-            </div>
+            </div> */}
 
             {/* Stats Section */}
-            <div className="mt-24 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
+            {/* <div className="mt-24 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
               <div className="relative group">
                 <div className="absolute inset-0 bg-blue-500/5 rounded-2xl blur-xl group-hover:bg-blue-500/10 transition-colors" />
                 <div className="relative bg-zinc-900/50 backdrop-blur-sm rounded-2xl border border-zinc-800 p-6 hover:border-blue-500/50 transition-colors">
@@ -151,7 +151,7 @@ export default function HeroSection() {
                   <div className="h-2 w-2 rounded-full absolute top-5 right-16">*</div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </main>
       </div>

@@ -23,7 +23,7 @@ const Login = () => {
       const res = await axios.post(
         BASE_URL + "/signup",
         { firstName, lastName, emailId, password },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       dispatch(addUser(res.data.data));
       setSuccess(res.data.message);
@@ -42,15 +42,18 @@ const Login = () => {
           emailId,
           password,
         },
-        { withCredentials: true }
+        { withCredentials: true },
       );
+
+      if (!res.data) {
+        setError("Internal server error");
+      }
 
       setError("");
       dispatch(addUser(res.data));
-      navigate("/feed");
-
       setEmail("");
       setPassword("");
+      navigate("/feed");
     } catch (error) {
       setError(error?.response?.data || "something went wrong");
     }
@@ -68,7 +71,7 @@ const Login = () => {
             <h1 className="text-xl font-semibold text-center">
               {isLoggedIn ? "Login" : "Sign up"}
             </h1>
-  
+
             {!isLoggedIn && (
               <>
                 <div className="form-control">
@@ -99,7 +102,7 @@ const Login = () => {
                 </div>
               </>
             )}
-  
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -113,7 +116,7 @@ const Login = () => {
                 required
               />
             </div>
-  
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Password</span>
@@ -132,15 +135,15 @@ const Login = () => {
                 </a>
               </label>
             </div>
-  
+
             <p className="text-red-500 text-xs">{error}</p>
-  
+
             <div className="form-control mt-6">
               <button className="btn btn-primary">
                 {isLoggedIn ? "Login" : "Signup"}
               </button>
             </div>
-  
+
             <p
               className="text-xs text-center cursor-pointer hover:underline pt-2"
               onClick={() => setIsLoggedIn((value) => !value)}

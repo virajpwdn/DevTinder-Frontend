@@ -11,6 +11,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@imagekit/react": "^5.0.2",
     "@reduxjs/toolkit": "^2.5.1",
     "@remixicon/react": "^4.9.0",

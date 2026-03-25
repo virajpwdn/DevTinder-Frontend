@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import PhotoContainer from "./PhotoContainer";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,8 +14,8 @@ const Features = () => {
   const imgRef = useRef(null);
   const bottomH1Ref = useRef(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  useGSAP(
+    () => {
       const cards = cardRefs.current;
       const section = scrollSectionRef.current;
       const topH1 = topH1Ref.current;
@@ -36,7 +37,6 @@ const Features = () => {
             trigger: card,
             start: "top 85%",
             end: "top 50%",
-            toggleActions: "play none none reverse",
           },
         });
       });
@@ -50,26 +50,21 @@ const Features = () => {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=200%",      
+          end: "+=800",
           pin: true,
           scrub: 1,
-          // markers: true,   
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
-    
       tl.to(topH1, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
-
-      
       tl.to(img, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, "+=0.1");
-
       tl.to(bottomH1, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, "+=0.1")
         .to(topH1, { opacity: 0, duration: 0.2, ease: "power2.in" }, "<");
-
-    }, containerRef); 
-
-    return () => ctx.revert();
-  }, []);
+    },
+    { scope: containerRef }, // ✅ scope covers both the grid and the pinned section
+  );
 
   return (
     <>
@@ -91,7 +86,10 @@ const Features = () => {
         ref={scrollSectionRef}
         className="scroll-photo w-full h-screen overflow-hidden p-20 flex items-center justify-center bg-white flex-col"
       >
-        <h1 ref={topH1Ref} className="text-8xl font-black uppercase py-10 text-center">
+        <h1
+          ref={topH1Ref}
+          className="text-8xl font-black uppercase py-10 text-center"
+        >
           Build your Dream Team
         </h1>
         <img
@@ -100,8 +98,10 @@ const Features = () => {
           className="w-1/2 rounded-xl"
           alt=""
         />
-
-        <h1 ref={bottomH1Ref} className="text-2xl font-black uppercase py-5 text-center">
+        <h1
+          ref={bottomH1Ref}
+          className="text-2xl font-black uppercase py-5 text-center"
+        >
           Find your vibe
         </h1>
       </div>

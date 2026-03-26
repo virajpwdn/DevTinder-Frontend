@@ -22,6 +22,7 @@ const Features = () => {
       const img = imgRef.current;
       const bottomH1 = bottomH1Ref.current;
 
+      console.log("h1 ref ", topH1);
       if (!section || !topH1 || !img || !bottomH1) return;
 
       // --- Cards stagger in ---
@@ -99,17 +100,13 @@ const Features = () => {
         >
           Build your Dream Team
         </h1>
-        <h1
-          ref={topH1Ref}
-          className="block md:hidden text-5xl md:text-8xl font-black uppercase py-10 text-center"
-        >
+        <h1 className="block md:hidden text-5xl md:text-8xl font-black uppercase py-10 text-center">
           Build your <br />
           Dream Team
         </h1>
 
-        <div className="p-5 flex items-center justify-center">
+        <div ref={imgRef} className="p-5 flex items-center justify-center">
           <img
-            ref={imgRef}
             src="/hero/img-4.png"
             className="w-full md:w-1/2 rounded-xl"
             alt="team-building"

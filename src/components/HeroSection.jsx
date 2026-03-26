@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
 
 export default function HeroSection() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="relative bg-zinc-950 overflow-hidden">
       {/* Subtle gradient background effects */}
@@ -13,7 +13,12 @@ export default function HeroSection() {
         <nav className="flex items-center justify-between px-6 py-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
             <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-lg">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="w-6 h-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -26,20 +31,32 @@ export default function HeroSection() {
           </div>
 
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <a
+              href="#features"
+              className="text-sm text-zinc-400 hover:text-white transition-colors"
+            >
               Features
             </a>
-            <a href="#how-it-works" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <a
+              href="#how-it-works"
+              className="text-sm text-zinc-400 hover:text-white transition-colors"
+            >
               How it works
             </a>
-            <a href="#community" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <a
+              href="#community"
+              className="text-sm text-zinc-400 hover:text-white transition-colors"
+            >
               Community
             </a>
           </div>
 
           <div className="flex items-center gap-4">
             {/* <button className="px-4 py-2 text-sm text-zinc-300 hover:text-white transition-colors">Login</button> */}
-            <button onClick={() => navigate("/login")} className="px-6 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+            <button
+              onClick={() => navigate("/login")}
+              className="px-6 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            >
               Get started
             </button>
           </div>
@@ -50,7 +67,12 @@ export default function HeroSection() {
           <div className="mx-auto max-w-4xl text-center">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-4 py-1.5 text-sm text-zinc-400 mb-8 backdrop-blur-sm">
-              <svg className="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg
+                className="w-4 h-4 text-indigo-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -63,25 +85,43 @@ export default function HeroSection() {
 
             {/* Main Heading */}
             <h1 className="text-5xl font-bold tracking-tight sm:text-7xl lg:text-8xl mb-6 text-white">
-              Where developers <span className="text-blue-500">connect</span>,{" "}
-              <span className="text-indigo-500">collaborate</span>, and build together
+              Where developers <span className="text-blue-500">connect</span>.{" "}
+              <span className="text-indigo-500">collaborate</span>. and build
+              together
             </h1>
 
             {/* Subheading */}
             <p className="mt-6 text-lg leading-8 text-zinc-400 max-w-2xl mx-auto">
-              Join thousands of developers making meaningful connections. Chat in real-time, collaborate on projects,
-              and build the future together on devtinder.
+              Join thousands of developers making meaningful connections. Chat
+              in real-time, collaborate on projects, and build the future
+              together on devtinder.
             </p>
 
             {/* CTA Buttons */}
             <div className="mt-10 flex items-center justify-center gap-4 flex-wrap">
-              <button onClick={() => navigate("/login")} className="flex items-center gap-2 px-8 py-3 text-base bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+              <button
+                onClick={() => navigate("/login")}
+                className="flex items-center gap-2 px-8 py-3 text-base bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
                 Start connecting
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
-              <button onClick={() => navigate("/login")} className="px-8 py-3 text-base border border-zinc-700 hover:bg-zinc-900 text-white rounded-lg transition-colors bg-transparent">
+              <button
+                onClick={() => navigate("/login")}
+                className="px-8 py-3 text-base border border-zinc-700 hover:bg-zinc-900 text-white rounded-lg transition-colors bg-transparent"
+              >
                 Explore community
               </button>
             </div>
@@ -156,5 +196,5 @@ export default function HeroSection() {
         </main>
       </div>
     </div>
-  )
+  );
 }

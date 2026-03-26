@@ -1,6 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "../../utils/constants";
+import { useEffect, useState } from "react";
+import PaymentService from "../../service/payment.service";
 
 const Premium = () => {
   const [error, setError] = useState("");
@@ -12,9 +11,7 @@ const Premium = () => {
 
   const verifyPremiumUser = async () => {
     try {
-      const response = await axios.get(BASE_URL + "/shop/premium/verify", {
-        withCredentials: true,
-      });
+      const response = PaymentService.verifyUserPremium();
       if (response.data.isPremium === true) {
         setPremiumUser(true);
       }
@@ -25,12 +22,7 @@ const Premium = () => {
 
   const paymentTypeHandler = async (membershipType) => {
     try {
-      const order = await axios.post(
-        BASE_URL + "/shop/payment/create",
-        { membershipType },
-        { withCredentials: true }
-      );
-
+      const order = await PaymentService.createOrder(membershipType);
       const { orderId, amount, currency, notes, key } = order.data;
 
       const options = {

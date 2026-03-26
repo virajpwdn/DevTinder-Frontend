@@ -59,11 +59,18 @@ const Features = () => {
       });
 
       tl.to(topH1, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
-      tl.to(img, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, "+=0.1");
-      tl.to(bottomH1, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, "+=0.1")
-        .to(topH1, { opacity: 0, duration: 0.2, ease: "power2.in" }, "<");
+      tl.to(
+        img,
+        { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" },
+        "+=0.1",
+      );
+      tl.to(
+        bottomH1,
+        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" },
+        "+=0.1",
+      ).to(topH1, { opacity: 0, duration: 0.2, ease: "power2.in" }, "<");
     },
-    { scope: containerRef }, // ✅ scope covers both the grid and the pinned section
+    { scope: containerRef },
   );
 
   return (
@@ -84,20 +91,30 @@ const Features = () => {
 
       <div
         ref={scrollSectionRef}
-        className="scroll-photo w-full h-screen overflow-hidden p-20 flex items-center justify-center bg-white flex-col"
+        className="scroll-photo w-full h-screen overflow-hidden md:p-20 flex items-center justify-center flex-col bg-white"
       >
         <h1
           ref={topH1Ref}
-          className="text-8xl font-black uppercase py-10 text-center"
+          className="hidden md:block text-5xl md:text-8xl font-black uppercase py-10 text-center"
         >
           Build your Dream Team
         </h1>
-        <img
-          ref={imgRef}
-          src="/hero/img-4.png"
-          className="w-1/2 rounded-xl"
-          alt=""
-        />
+        <h1
+          ref={topH1Ref}
+          className="block md:hidden text-5xl md:text-8xl font-black uppercase py-10 text-center"
+        >
+          Build your <br />
+          Dream Team
+        </h1>
+
+        <div className="p-5 flex items-center justify-center">
+          <img
+            ref={imgRef}
+            src="/hero/img-4.png"
+            className="w-full md:w-1/2 rounded-xl"
+            alt="team-building"
+          />
+        </div>
         <h1
           ref={bottomH1Ref}
           className="text-2xl font-black uppercase py-5 text-center"

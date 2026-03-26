@@ -1,11 +1,11 @@
-import { RiShiningFill, RiUserStarFill } from "@remixicon/react";
+import { RiAddLine, RiShiningFill } from "@remixicon/react";
 
 const Pricing = () => {
   return (
     <div className="bg-white py-40">
       <h1 className="text-center text-5xl font-light">Plans & Pricing</h1>
-      <div className="p-20 bg-[#F9F9F9] m-20 rounded-2xl flex items-center justify-center gap-20">
-        <div className="bg-white p-5 w-[410px] rounded-lg">
+      <div className="p-20 bg-[#F9F9F9] m-5 sm:m-20 rounded-2xl flex flex-col lg:flex-row items-center justify-center gap-20">
+        <div className="bg-white p-5 h-[550px] w-[410px] rounded-lg">
           <div className="top bg-[#F9F9F9] p-3 rounded-lg">
             <div className="rounded-full bg-[#EFE9FF] h-7 w-7 flex items-center justify-center">
               <RiShiningFill color="black" size={16} />
@@ -24,58 +24,98 @@ const Pricing = () => {
             <p className="text-black/60">Basic Plan Include</p>
             <ul className="mt-2 flex flex-col gap-2">
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  connect with{" "}
+                  <b className="text-black/50"> like-minded people </b>
+                </p>
               </li>
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  <b className="text-black/50">one to one chat </b>
+                  after connection
+                </p>
               </li>
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  <b className="text-black/50">customise</b> your profile
+                  (limited)
+                </p>
               </li>
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  <b className="text-black/50">no backtracking</b>
+                </p>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="bg-white p-5 w-[410px] rounded-lg">
-          <div className="top bg-gradient-to-br from-[#6725F3] via-[#581ECE] to-[#4718A4] p-3 rounded-lg">
+        <div className="bg-white h-[550px] p-5 w-[410px] rounded-lg ">
+          <div className="top bg-gradient-to-br from-[#6725F3] via-[#581ECE] to-[#4718A4] p-3 rounded-lg relative">
             <div className="rounded-full bg-[#EFE9FF] h-7 w-7 flex items-center justify-center">
               <RiShiningFill color="black" size={16} />
             </div>
             <div className="cta flex flex-col gap-5 text-white mt-5">
               <h4 className="text-xl">Premium</h4>
-              <h4 className="text-3xl font-semibold">$ 600</h4>
+              <h4 className="text-3xl font-semibold">
+                Rs 600<span className="text-xs font-light"> / per month</span>
+              </h4>
               <h4 className="text-sm">Per month</h4>
               <button className="w-full py-3 bg-gradient-to-br from-[#5C21DA] to-[#6523E9] rounded-lg text-white shadow-md text-sm">
                 Choose this plan
               </button>
             </div>
+            <span className="text-xs bg-[#6A24F8]/60 shadow-sm text-white px-4 py-1 rounded-xl absolute top-4 right-4">
+              Most Popular
+            </span>
           </div>
 
           <div className="pt-4">
             <p className="text-black/60">Basic Plan Include</p>
             <ul className="mt-2 flex flex-col gap-2">
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+
+                <p>
+                  Get a <b className="text-black/50">verified</b> Blue Tick
+                </p>
               </li>
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  Unlimited <b className="text-black/50">Backtracking</b> per
+                  week
+                </p>
               </li>
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  Send Unlimited
+                  <b className="text-black/50"> Direct Messages</b>
+                </p>
               </li>
               <li className="flex gap-3 items-center justify-start leading-none">
-                <RiUserStarFill color="black" size={20} />
-                20 emails per month
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  Share <b className="text-black/50">Project Ideas</b> on feed
+                </p>
+              </li>
+              <li className="flex gap-3 items-center justify-start leading-none">
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  Connect <b className="text-black/50">Git Account</b> to share
+                  projects
+                </p>
+              </li>
+              <li className="flex gap-3 items-center justify-start leading-none">
+                <RiAddLine size={20} color="gray" />
+                <p>
+                  <b className="text-black/50">12 Months Access</b>
+                </p>
               </li>
             </ul>
           </div>

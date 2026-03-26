@@ -87,14 +87,14 @@ const Details = () => {
   return (
     <div
       ref={sectionRef}
-      className="py-40 px-40 flex items-center justify-center gap-32 bg-black relative overflow-hidden h-screen"
+      className="py-5 md:py-40 px-5 md:px-40 flex items-center justify-center gap-10 sm:gap-32 bg-black relative overflow-hidden h-screen"
     >
-      <div className="lg:w-1/2 heading-container flex flex-col gap-10">
+      <div className="lg:w-1/2 heading-container flex flex-col gap-10 w-full">
         {HEADING.map((text, idx) => (
           <h1
             key={idx}
             ref={(el) => (textRefs.current[idx] = el)}
-            className="text-5xl whitespace-pre-line"
+            className="text-lg sm:text-4xl lg:text-5xl whitespace-pre-line w-full"
           >
             {text.title}
           </h1>
@@ -141,22 +141,3 @@ const Details = () => {
 };
 
 export default Details;
-
-// photos-container lg:w-1/2 lg:sticky lg:top-0 h-screen overflow-hidden flex items-center justify-center
-// relative w-full h-[50vh] bg-red-500 rounded-2xl overflow-hidden
-
-/**
- *  <div className="photos-container relative">
-        <div className="bg-blue text-white rounded-xl max-w-115 w-full p-10 min-h-112 flex flex-col justify-between ml-auto">
-          {PHOTOPATH.map((item, idx) => (
-            <div
-              key={idx}
-              ref={(el) => (imgRefs.current[idx] = el)}
-              className=""
-            >
-              <PhotoContainer src={item.src} />
-            </div>
-          ))}
-        </div>
-      </div>
- */

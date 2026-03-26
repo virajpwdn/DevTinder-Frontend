@@ -1,12 +1,12 @@
 import BottomFooter from "../Footer";
-const HeroFotter = () => {
+const Footer = () => {
   return (
-    <div>
-      <h1 className="uppercase text-[11vw] text-center bg-white font-bold">
+    <div className="w-full">
+      <h1 className="uppercase text-[14vw] sm:text-[11vw] text-center bg-white font-bold">
         Devtinder
       </h1>
       <BottomFooter />
     </div>
   );
 };
-export default HeroFotter;
+export default Footer;

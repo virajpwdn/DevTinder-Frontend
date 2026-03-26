@@ -1,5 +1,4 @@
-import PhotoContainer from "./PhotoContainer";
-import { HEADING, PHOTOPATH } from "../../utils/constants";
+import { HEADING } from "../../utils/constants";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef } from "react";
@@ -14,16 +13,15 @@ const Details = () => {
 
   useGSAP(
     () => {
+      // all headings dim initially
+      gsap.set(textRefs.current, { color: "#ffffff40" }); // dim/faded white
+
       imgRefs.current.forEach((card, i) => {
         gsap.set(card, {
           y: "180%",
           rotate: i % 2 === 0 ? -10 : 10,
         });
       });
-
-    //   gsap.set(sectionRef.current, {
-    //     opacity: 0,
-    //   });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -33,21 +31,55 @@ const Details = () => {
           scrub: 1,
           pin: true,
           anticipatePin: 1,
-          markers: true,
+          // markers: true,
         },
       });
 
-    //   tl.to(sectionRef.current, {
-    //     opacity: 1,
-    //   });
+      // Card 0 comes in → heading 0 brightens
+      tl.to(
+        imgRefs.current[0],
+        { y: 0, rotate: 0, duration: 2, ease: "power2.out" },
+        0,
+      );
+      tl.to(
+        textRefs.current[0],
+        { color: "#ffffff", duration: 1, ease: "none" },
+        0, // same start as card 0
+      );
 
-      tl.to(imgRefs.current, {
-        y: 0,
-        rotate: 0,
-        duration: 2,
-        stagger: 1,
-        ease: "power2.out",
-      });
+      // Card 1 comes in → heading 0 dims, heading 1 brightens
+      tl.to(
+        imgRefs.current[1],
+        { y: 0, rotate: 0, duration: 2, ease: "power2.out" },
+        1,
+      );
+      tl.to(
+        textRefs.current[0],
+        { color: "#ffffff40", duration: 1, ease: "none" },
+        1, // dim heading 0 as card 1 arrives
+      );
+      tl.to(
+        textRefs.current[1],
+        { color: "#ffffff", duration: 1, ease: "none" },
+        1, // brighten heading 1
+      );
+
+      // Card 2 comes in → heading 1 dims, heading 2 brightens
+      tl.to(
+        imgRefs.current[2],
+        { y: 0, rotate: 0, duration: 2, ease: "power2.out" },
+        2,
+      );
+      tl.to(
+        textRefs.current[1],
+        { color: "#ffffff40", duration: 1, ease: "none" },
+        2,
+      );
+      tl.to(
+        textRefs.current[2],
+        { color: "#ffffff", duration: 1, ease: "none" },
+        2,
+      );
     },
     { scope: sectionRef },
   );
@@ -57,17 +89,18 @@ const Details = () => {
       ref={sectionRef}
       className="py-40 px-40 flex items-center justify-center gap-32 bg-black relative overflow-hidden h-screen"
     >
-      <div className="lg:w-1/2 heading-container flex flex-col gap-10 ">
+      <div className="lg:w-1/2 heading-container flex flex-col gap-10">
         {HEADING.map((text, idx) => (
           <h1
             key={idx}
             ref={(el) => (textRefs.current[idx] = el)}
-            className="text-5xl whitespace-pre-line text-white"
+            className="text-5xl whitespace-pre-line"
           >
             {text.title}
           </h1>
         ))}
       </div>
+
       {/* right cards */}
       <div className="relative">
         <div
@@ -94,7 +127,7 @@ const Details = () => {
 
         <div
           ref={(el) => (imgRefs.current[2] = el)}
-          className="card bg-green-500 text-white rounded-3xl max-w-96 w-full p-5  flex flex-col justify-between absolute top-32"
+          className="card bg-green-500 text-white rounded-3xl max-w-96 w-full p-5 flex flex-col justify-between absolute top-32"
         >
           <img
             src="/hero/img-5.jpg"
@@ -106,6 +139,7 @@ const Details = () => {
     </div>
   );
 };
+
 export default Details;
 
 // photos-container lg:w-1/2 lg:sticky lg:top-0 h-screen overflow-hidden flex items-center justify-center

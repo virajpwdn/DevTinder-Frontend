@@ -14,10 +14,10 @@ import Premium from "./components/shop/Premium";
 
 // New Chat imports
 import Chat from "./components/chat/Chat";
-import Hero from "./components/Hero";
+import Hero from "./components/hero/Index";
 import GuestProfile from "./components/GuestProfile";
 import HeroComp from "./components/hero/HeroComp";
-import Index from "./components/hero/Index";
+// import Index from "./components/hero/Index";
 
 const App = () => {
   return (
@@ -26,7 +26,6 @@ const App = () => {
         <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<Hero />} />
-            <Route path="/index" element={<Index />} />
             <Route path="/" element={<Body />}>
               <Route path="/feed" element={<Feed />} />
               <Route path="/login" element={<Login />} />

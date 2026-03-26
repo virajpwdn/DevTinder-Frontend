@@ -1,8 +1,8 @@
 import HeroSection from "../HeroSection";
 import Details from "./Details";
 import Features from "./Features";
-import Footer from "./Hero-Footer";
 import Pricing from "./Pricing";
+import Footer from "./Hero-Footer";
 const Index = () => {
   return (
     <div>
